@@ -272,3 +272,4 @@ mailpit
 charj/media/
 
 .pytest_cache/
+.env
