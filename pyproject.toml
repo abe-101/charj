@@ -179,4 +179,6 @@ dependencies = [
     "psycopg[c]==3.3.2",
     "sentry-sdk==2.48.0",
     "django-anymail[mailjet]==14.0",
+    "dj-stripe>=2.10.3",
+    "stripe>=14.1.0",
 ]
