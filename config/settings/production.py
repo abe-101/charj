@@ -173,3 +173,8 @@ sentry_sdk.init(
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+#
+# https://github.com/dj-stripe/dj-stripe/blob/stable/2.10/docs/installation.md
+STRIPE_LIVE_MODE = True
+STRIPE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
+STRIPE_PUBLIC_KEY = env("STRIPE_LIVE_PUBLIC_KEY")
