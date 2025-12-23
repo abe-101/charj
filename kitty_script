@@ -1,0 +1,39 @@
+#!/bin/zsh
+PROJECT_NAME="charj"
+# this is the directory where I keep all my projects
+PROJECT_DIR="$HOME/repos/$PROJECT_NAME"
+# I use virtualenvwrapper to manage my virtual environments
+VENV_DIR="$HOME/.envs/$PROJECT_NAME"
+ENV_FILE="$PROJECT_DIR/.env"
+
+STRIPE_CONFIG_DIR="$HOME/.config/stripe/$PROJECT_NAME.toml"
+
+kitty @ launch --type os-window --title Vim --cwd $PROJECT_DIR
+kitty @ resize-os-window --match 'title:^Vim' --action toggle-maximized
+kitty @ send-text --match 'title:^Vim' source $VENV_DIR/bin/activate'\n'
+kitty @ send-text --match 'title:^Vim' source $ENV_FILE'\n'
+kitty @ send-text --match 'title:^Vim' vim .'\n'
+
+# Create the first tab for the server
+kitty @ launch --type tab --tab-title Server --cwd $PROJECT_DIR
+kitty @ send-text --match-tab 'title:^Server' source $VENV_DIR/bin/activate'\n'
+kitty @ send-text --match-tab 'title:^Server' uv run python manage.py runserver'\n'
+
+
+# add window for flower
+kitty @ launch --title Flower --cwd $PROJECT_DIR
+kitty @ send-text --match 'title:^Lab' source $VENV_DIR/bin/activate'\n'
+kitty @ send-text --match 'title:^Lab' source $ENV_FILE'\n'
+# dont auto open the the lab instead leave the command ready to start it
+kitty @ send-text --match 'title:^Lab' python manage.py shell_plus --lab
+
+# add window for mailpit
+kitty @ launch --title Mailpit --cwd $PROJECT_DIR
+kitty @ send-text --match 'title:^Mailpit' source $ENV_FILE'\n'
+kitty @ send-text --match 'title:^Mailpit' mailpit --smtp \"\[::\]:2525\"'\n'
+
+# Create the second tab for Stripe commands
+kitty @ launch --type tab --tab-title Stripe --cwd $PROJECT_DIR
+kitty @ send-text --match-tab 'title:^Stripe' stripe listen --forward-to http://127.0.0.1:8000/djstripe/webhook/84a471c7-a759-406f-a4c9-7eaf1b947432/ --config $STRIPE_CONFIG_DIR -H \"x-djstripe-webhook-secret: $(stripe listen --config $STRIPE_CONFIG_DIR --print-secret)\"'\n'
+
+kitty @ focus-tab --match 'title:^Vim'
