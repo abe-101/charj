@@ -83,6 +83,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.mfa",
     "allauth.socialaccount",
+    "djstripe",
 ]
 
 LOCAL_APPS = [
@@ -289,3 +290,9 @@ SOCIALACCOUNT_FORMS = {"signup": "charj.users.forms.UserSocialSignupForm"}
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+# https://github.com/dj-stripe/dj-stripe/blob/stable/2.10/docs/installation.md
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+DJSTRIPE_SUBSCRIBER_MODEL = "users.User"
+STRIPE_LIVE_MODE = False
+STRIPE_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY", default="sk_test_12345")
+STRIPE_PUBLIC_KEY = env("STRIPE_TEST_PUBLIC_KEY", default="pk_test_12345")
