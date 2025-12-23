@@ -148,6 +148,7 @@ dev = [
     "django-extensions==4.1",
     "django-coverage-plugin==3.2.0",
     "pytest-django==4.11.1",
+    "responses>=0.25.8",
 ]
 
 [project]
