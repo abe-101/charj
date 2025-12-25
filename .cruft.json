@@ -1,0 +1,39 @@
+{
+  "template": "https://github.com/cookiecutter/cookiecutter-django",
+  "commit": "5deda24cd621f02cbadcec77411ee148467a8bd7",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "Charj",
+      "project_slug": "charj",
+      "description": "Keep your credit cards active with automatic $1 annual charges. Prevent account closures and protect your credit score.",
+      "author_name": "Abe Hanoka",
+      "domain_name": "charj.cc",
+      "email": "abe@habet.dev",
+      "version": "0.1.0",
+      "open_source_license": "GPLv3",
+      "username_type": "email",
+      "timezone": "UTC",
+      "windows": "n",
+      "editor": "None",
+      "use_docker": "n",
+      "postgresql_version": "18",
+      "cloud_provider": "None",
+      "mail_service": "Mailjet",
+      "use_async": "n",
+      "use_drf": "n",
+      "frontend_pipeline": "None",
+      "use_celery": "n",
+      "use_mailpit": "y",
+      "use_sentry": "y",
+      "use_whitenoise": "y",
+      "use_heroku": "n",
+      "ci_tool": "Github",
+      "keep_local_envs_in_vcs": "n",
+      "debug": "n",
+      "_template": "https://github.com/cookiecutter/cookiecutter-django",
+      "_commit": "6a8206c8a477ff43e3d14dc9bbca352216f4db44"
+    }
+  },
+  "directory": null
+}
