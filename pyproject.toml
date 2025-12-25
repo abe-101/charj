@@ -182,4 +182,5 @@ dependencies = [
     "django-anymail[mailjet]==14.0",
     "dj-stripe>=2.10.3",
     "stripe>=14.1.0",
+    "attrs>=25.4.0",
 ]

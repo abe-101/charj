@@ -6,24 +6,146 @@
   Card Management
 {% endblock title %}
 {% block content %}
+  <style>
+    .card-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 38px;
+      border-radius: 6px;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      padding: 4px;
+    }
+
+    .card-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .card-list-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      background: white;
+      transition: all 0.2s ease;
+    }
+
+    .card-list-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-color: #adb5bd;
+    }
+
+    .card-info {
+      flex: 1;
+      margin-left: 1rem;
+      min-width: 0;
+    }
+
+    .card-number {
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-expiry {
+      font-size: 0.875rem;
+      color: #6c757d;
+    }
+
+    .card-badges {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge-pill {
+      border-radius: 50px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      color: #adb5bd;
+      margin-bottom: 1rem;
+    }
+  </style>
   <div class="container mt-4">
     <div class="row justify-content-center">
-      <div class="col-md-8">
+      <div class="col-lg-8">
         <h2 class="mb-4">Card Management</h2>
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">Add New Card</h5>
-            <p class="card-text">Add a credit card to keep active with an annual $1 charge.</p>
-            <a href="{% url 'cards:add' %}" class="btn btn-primary">Add Card</a>
+        {% if has_cards %}
+          <div class="mb-4">
+            <h5 class="mb-3 text-muted fw-normal">Your Cards</h5>
+            {% for card in cards_data %}
+              <div class="card-list-item">
+                <div class="card-logo">
+                  <img src="{% static 'images/networks/' %}{{ card.brand|lower }}.png"
+                       alt="{{ card.brand }}"
+                       onerror="this.onerror=null; this.src='{% static 'images/networks/card.png' %}';" />
+                </div>
+                <div class="card-info">
+                  <div class="card-number">•••• •••• •••• {{ card.last4 }}</div>
+                  <div class="card-expiry">Expires {{ card.exp_month|stringformat:"02d" }}/{{ card.exp_year }}</div>
+                </div>
+                <div class="card-badges">
+                  {% if card.is_default %}<span class="badge bg-primary badge-pill">Default</span>{% endif %}
+                  {% if card.is_active %}
+                    <span class="badge bg-success badge-pill">Active</span>
+                  {% elif card.subscription_status == "past_due" %}
+                    <span class="badge bg-warning text-dark badge-pill">Past Due</span>
+                  {% elif card.subscription_status == "canceled" %}
+                    <span class="badge bg-secondary badge-pill">Canceled</span>
+                  {% elif card.subscription_status == "incomplete" %}
+                    <span class="badge bg-info text-dark badge-pill">Incomplete</span>
+                  {% elif card.has_subscription %}
+                    <span class="badge bg-secondary badge-pill">{{ card.subscription_status|title }}</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark badge-pill">No Subscription</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
           </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Manage Subscriptions</h5>
-            <p class="card-text">
-              View all your subscriptions, update payment methods, cancel subscriptions, and view payment history.
-            </p>
-            <a href="{% url 'cards:customer_portal' %}" class="btn btn-secondary">Manage Subscriptions</a>
+        {% else %}
+          <div class="text-center py-5 mb-4">
+            <div class="empty-state-icon">💳</div>
+            <h5 class="text-muted">No Cards Yet</h5>
+            <p class="text-muted mb-4">Add your first card to start keeping it active!</p>
+          </div>
+        {% endif %}
+        <div class="mt-5">
+          <h5 class="mb-3 text-muted fw-normal">Quick Actions</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                  <h6 class="card-title fw-bold">Add New Card</h6>
+                  <p class="card-text text-muted small mb-3">Keep your card active with an annual $1 charge.</p>
+                  <a href="{% url 'cards:add' %}" class="btn btn-primary btn-sm">Add Card</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                  <h6 class="card-title fw-bold">Manage Subscriptions</h6>
+                  <p class="card-text text-muted small mb-3">Update payment methods and view payment history.</p>
+                  <a href="{% url 'cards:customer_portal' %}"
+                     class="btn btn-secondary btn-sm">Manage</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
