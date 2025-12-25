@@ -60,6 +60,12 @@
       color: #6c757d;
     }
 
+    .card-next-charge {
+      font-size: 0.875rem;
+      color: #495057;
+      margin-top: 0.25rem;
+    }
+
     .card-badges {
       display: flex;
       gap: 0.5rem;
@@ -79,24 +85,78 @@
       color: #adb5bd;
       margin-bottom: 1rem;
     }
+
+    .summary-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card h5 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-card .display-4 {
+      font-weight: 700;
+    }
+
+    .quick-action-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .quick-action-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .max-width-400 {
+      max-width: 400px;
+    }
   </style>
   <div class="container mt-4">
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <h2 class="mb-4">Card Management</h2>
         {% if has_cards %}
+          <!-- Total Cost Summary -->
+          <div class="summary-card">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <h5 class="mb-1">Total Annual Cost</h5>
+                <p class="mb-0 opacity-90">
+                  {{ cards_data|length }} card{{ cards_data|length|pluralize }} × $1 per year =
+                  <strong>${{ cards_data|length }}/year</strong>
+                </p>
+                <small class="opacity-75">Each card has its own subscription</small>
+              </div>
+              <div class="col-md-4 text-end">
+                <h1 class="display-4 mb-0">${{ cards_data|length }}</h1>
+                <small class="opacity-75">per year</small>
+              </div>
+            </div>
+          </div>
+          <!-- Cards List -->
           <div class="mb-4">
             <h5 class="mb-3 text-muted fw-normal">Your Cards</h5>
             {% for card in cards_data %}
               <div class="card-list-item">
                 <div class="card-logo">
-                  <img src="{% static 'images/networks/' %}{{ card.brand|lower }}.png"
+                  <img src="{% static 'images/networks/' %}{{ card.brand_image }}"
                        alt="{{ card.brand }}"
                        onerror="this.onerror=null; this.src='{% static 'images/networks/card.png' %}';" />
                 </div>
                 <div class="card-info">
                   <div class="card-number">•••• •••• •••• {{ card.last4 }}</div>
                   <div class="card-expiry">Expires {{ card.exp_month|stringformat:"02d" }}/{{ card.exp_year }}</div>
+                  {% if card.next_billing_date %}
+                    <div class="card-next-charge">
+                      <strong>Next charge:</strong> {{ card.next_billing_date|date:"M d, Y" }} ($1)
+                    </div>
+                  {% endif %}
                 </div>
                 <div class="card-badges">
                   {% if card.is_default %}<span class="badge bg-primary badge-pill">Default</span>{% endif %}
@@ -118,31 +178,66 @@
             {% endfor %}
           </div>
         {% else %}
+          <!-- Empty State -->
           <div class="text-center py-5 mb-4">
             <div class="empty-state-icon">💳</div>
             <h5 class="text-muted">No Cards Yet</h5>
-            <p class="text-muted mb-4">Add your first card to start keeping it active!</p>
+            <p class="text-muted mb-3">Keep your credit cards active and prevent closures due to inactivity.</p>
+            <!-- How It Works Box -->
+            <div class="card border-primary mb-4 d-inline-block text-start max-width-400">
+              <div class="card-body">
+                <h6 class="card-title text-primary mb-3">How It Works</h6>
+                <ol class="mb-0 ps-3">
+                  <li class="mb-2">Add your card</li>
+                  <li class="mb-2">
+                    We charge <strong>$1 immediately</strong>
+                  </li>
+                  <li class="mb-2">
+                    Then <strong>$1 once per year</strong>
+                  </li>
+                  <li class="mb-0">Your card stays active ✅</li>
+                </ol>
+              </div>
+            </div>
+            <p class="text-muted small mb-3">
+              Each card you add gets its own subscription.
+              <br />
+              Cancel anytime - no future charges.
+            </p>
+            <div class="alert alert-warning d-inline-block small mb-4 max-width-400">
+              <strong>💡 Recommended:</strong> Enable auto-pay on your card to ensure uninterrupted service.
+            </div>
+            <a href="{% url 'cards:add' %}" class="btn btn-primary btn-lg">Add Your First Card</a>
           </div>
         {% endif %}
         <div class="mt-5">
           <h5 class="mb-3 text-muted fw-normal">Quick Actions</h5>
           <div class="row g-3">
             <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100">
+              <div class="card border-0 shadow-sm h-100 quick-action-card">
                 <div class="card-body">
                   <h6 class="card-title fw-bold">Add New Card</h6>
-                  <p class="card-text text-muted small mb-3">Keep your card active with an annual $1 charge.</p>
+                  <p class="card-text text-muted small mb-1">Keep another card active.</p>
+                  <ul class="small text-muted mb-3 ps-3">
+                    <li>$1 charged today</li>
+                    <li>Then $1 once per year</li>
+                  </ul>
                   <a href="{% url 'cards:add' %}" class="btn btn-primary btn-sm">Add Card</a>
                 </div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="card border-0 shadow-sm h-100">
+              <div class="card border-0 shadow-sm h-100 quick-action-card">
                 <div class="card-body">
                   <h6 class="card-title fw-bold">Manage Subscriptions</h6>
-                  <p class="card-text text-muted small mb-3">Update payment methods and view payment history.</p>
+                  <p class="card-text text-muted small mb-1">Stripe's secure portal lets you:</p>
+                  <ul class="small text-muted mb-3 ps-3">
+                    <li>View billing history</li>
+                    <li>Update payment methods</li>
+                    <li>Cancel subscriptions</li>
+                  </ul>
                   <a href="{% url 'cards:customer_portal' %}"
-                     class="btn btn-secondary btn-sm">Manage</a>
+                     class="btn btn-secondary btn-sm">Open Stripe Portal →</a>
                 </div>
               </div>
             </div>
