@@ -112,6 +112,12 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_REDIRECT_URL = "users:redirect"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
+# https://docs.djangoproject.com/en/dev/ref/settings/#login-required-ignore-view-names
+LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
+    # Public pages
+    "home",
+    "about",
+]
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -144,6 +150,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
@@ -297,3 +304,5 @@ DJSTRIPE_SUBSCRIBER_MODEL = "users.User"
 STRIPE_LIVE_MODE = False
 STRIPE_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY", default="sk_test_12345")
 STRIPE_PUBLIC_KEY = env("STRIPE_TEST_PUBLIC_KEY", default="pk_test_12345")
+# Stripe Subscription Settings
+STRIPE_PRICE_ID = env("STRIPE_PRICE_ID", default="")

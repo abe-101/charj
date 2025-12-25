@@ -19,6 +19,7 @@ urlpatterns = [
     path("users/", include("charj.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    path("cards/", include("charj.cards.urls", namespace="cards")),
     # ...
     path("djstripe/", include("djstripe.urls", namespace="djstripe")),
     # Media files

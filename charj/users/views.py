@@ -1,4 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import QuerySet
 from django.urls import reverse
@@ -10,7 +9,7 @@ from django.views.generic import UpdateView
 from charj.users.models import User
 
 
-class UserDetailView(LoginRequiredMixin, DetailView):
+class UserDetailView(DetailView):
     model = User
     slug_field = "id"
     slug_url_kwarg = "id"
@@ -19,7 +18,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 user_detail_view = UserDetailView.as_view()
 
 
-class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UserUpdateView(SuccessMessageMixin, UpdateView):
     model = User
     fields = ["name"]
     success_message = _("Information successfully updated")
@@ -36,7 +35,7 @@ class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 user_update_view = UserUpdateView.as_view()
 
 
-class UserRedirectView(LoginRequiredMixin, RedirectView):
+class UserRedirectView(RedirectView):
     permanent = False
 
     def get_redirect_url(self) -> str:
