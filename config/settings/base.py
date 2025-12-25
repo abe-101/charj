@@ -117,6 +117,12 @@ LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     # Public pages
     "home",
 ]
+# URLs that should be accessible without authentication
+# Used by CustomLoginRequiredMiddleware
+OPEN_URLS = [
+    "/",  # Home page
+    "/djstripe/webhook/*",  # Stripe webhooks (with wildcard for UUID paths)
+]
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -149,7 +155,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.LoginRequiredMiddleware",
+    "config.middleware.CustomLoginRequiredMiddleware",  # Custom middleware that supports OPEN_URLS
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
