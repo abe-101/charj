@@ -10,6 +10,8 @@ from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from djstripe.models import Customer
 
+from charj.cards.services import get_user_cards
+
 logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -18,6 +20,13 @@ class DashboardView(TemplateView):
     """Dashboard showing card management options."""
 
     template_name = "cards/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cards_data = get_user_cards(self.request.user)
+        context["cards_data"] = cards_data
+        context["has_cards"] = len(cards_data) > 0
+        return context
 
 
 dashboard_view = DashboardView.as_view()
