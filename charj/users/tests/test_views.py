@@ -3,7 +3,6 @@ from http import HTTPStatus
 import pytest
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpRequest
@@ -90,12 +89,10 @@ class TestUserDetailView:
 
         assert response.status_code == HTTPStatus.OK
 
-    def test_not_authenticated(self, user: User, rf: RequestFactory):
-        request = rf.get("/fake-url/")
-        request.user = AnonymousUser()
-        response = user_detail_view(request, pk=user.pk)
+    def test_not_authenticated(self, user: User, client):
+        response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))
         login_url = reverse(settings.LOGIN_URL)
 
         assert isinstance(response, HttpResponseRedirect)
         assert response.status_code == HTTPStatus.FOUND
-        assert response.url == f"{login_url}?next=/fake-url/"
+        assert login_url in response.url

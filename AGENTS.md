@@ -1,10 +1,76 @@
 # AGENTS.md
 
-This file provides guidance to agetns when working with code in this repository.
+This file provides guidance to agents when working with code in this repository.
+
+# Charj - Credit Card Keep-Alive Service
 
 ## Project Overview
+A Django-based SaaS application that helps users keep their credit cards active by
+charging $1 annually per card. This prevents credit card accounts from being closed
+due to inactivity.
 
-Charj is a Django application that helps keep credit cards active with automatic $1 annual charges to prevent account closures and protect credit scores. Built with Cookiecutter Django and integrated with Stripe for payment processing via dj-stripe.
+## Tech Stack
+- **Backend:** Django (cookiecutter-django template)
+- **Payment Processing:** Stripe + dj-stripe
+- **Frontend:** Bootstrap + Stripe Elements (JavaScript)
+- **Database:** PostgreSQL (via cookiecutter defaults)
+
+## User Flow
+
+### Registration & Onboarding
+1. User creates account via Django authentication
+2. Stripe Customer object automatically created and linked to user account
+3. User directed to dashboard
+
+### Adding Credit Cards
+1. User clicks "Add New Card" from dashboard
+2. Backend creates Stripe SetupIntent
+3. Frontend displays embedded Stripe Elements form
+4. User enters card details
+5. JavaScript calls `stripe.confirmCardSetup()` (handles 3D Secure authentication)
+6. Backend receives authenticated PaymentMethod ID
+7. Backend creates annual $1 subscription tied to that specific card
+8. User redirected to dashboard with new card listed
+
+### Managing Existing Cards/Subscriptions
+1. Dashboard displays list of all cards with:
+   - Last 4 digits and card brand
+   - Subscription status (active/past_due/canceled)
+   - Next billing date
+   - Total annual cost summary
+2. Single "Manage Subscriptions" button (typically in header or prominent position)
+3. Button opens Stripe Customer Portal showing all subscriptions
+4. User can:
+   - View all subscriptions in one place
+   - Update payment methods for any subscription
+   - Cancel any subscription
+   - View complete payment history
+   - Update billing details
+5. User returns to dashboard after management
+6. Webhooks keep dj-stripe models in sync
+
+## Technical Architecture
+
+### Key Components
+- **Custom Views:** Dashboard, Add Card flow (SetupIntent-based)
+- **Stripe Integration:** Customer Portal for management, Elements for card collection
+- **Webhook Handling:** dj-stripe receives Stripe events (subscription updates,
+  payment success/failure)
+- **Signal Handlers:** Django signals from dj-stripe for application-specific logic
+
+### Stripe Objects
+- **Customer:** One per user
+- **PaymentMethod:** One per credit card
+- **Subscription:** One per card, annual billing cycle
+- **Product/Price:** Single $1/year product configured in Stripe dashboard
+
+## Benefits of This Approach
+- **Security:** PCI-compliant, Stripe handles sensitive card data
+- **Low maintenance:** Customer Portal reduces custom code for management features
+- **Better UX:** Embedded Elements keeps add-card flow integrated, SetupIntent handles
+  authentication upfront
+- **Scalability:** dj-stripe keeps local database in sync via webhooks
+- **International ready:** SetupIntent handles SCA/3D Secure for global compliance
 
 ## Development Setup
 
