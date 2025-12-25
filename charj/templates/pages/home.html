@@ -1,1 +1,932 @@
-{% extends "base.html" %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Primary Meta Tags -->
+    <title>Charj - Keep Your Credit Cards Active | $1/Year Per Card</title>
+    <meta name="title"
+          content="Charj - Keep Your Credit Cards Active | $1/Year Per Card" />
+    <meta name="description"
+          content="Prevent credit card closures due to inactivity. Charj automatically charges $1/year per card to keep your credit cards active and protect your credit score. Secure, automated, and Stripe-powered." />
+    <meta name="keywords"
+          content="credit card keep alive, prevent card closure, credit card inactivity, credit score protection, automated card charges, stripe payment service" />
+    <meta name="author" content="Charj" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://charj.com/" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://charj.com/" />
+    <meta property="og:title"
+          content="Charj - Keep Your Credit Cards Active | $1/Year Per Card" />
+    <meta property="og:description"
+          content="Prevent credit card closures due to inactivity. Charj automatically charges $1/year per card to keep your credit cards active and protect your credit score." />
+    <meta property="og:image" content="https://charj.com/og-image.png" />
+    <meta property="og:site_name" content="Charj" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://charj.com/" />
+    <meta property="twitter:title"
+          content="Charj - Keep Your Credit Cards Active | $1/Year Per Card" />
+    <meta property="twitter:description"
+          content="Prevent credit card closures due to inactivity. Charj automatically charges $1/year per card to keep your credit cards active." />
+    <meta property="twitter:image"
+          content="https://charj.com/twitter-image.png" />
+    <!-- Favicon -->
+    <link rel="icon"
+          type="image/x-icon"
+          href="{% static 'images/favicons/favicon.ico' %}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+          rel="stylesheet" />
+    <!-- JSON-LD Structured Data for SEO and LLMs -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Charj",
+        "applicationCategory": "FinanceApplication",
+        "description": "Credit card keep-alive service that prevents card closures due to inactivity by automatically charging $1 per year per card.",
+        "offers": {
+          "@type": "Offer",
+          "price": "1.00",
+          "priceCurrency": "USD",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "1.00",
+            "priceCurrency": "USD",
+            "billingDuration": "P1Y",
+            "referenceQuantity": {
+              "@type": "QuantitativeValue",
+              "value": "1",
+              "unitText": "credit card"
+            }
+          }
+        },
+        "featureList": [
+          "Automated annual charges to keep cards active",
+          "Secure Stripe-powered payment processing",
+          "Easy card management dashboard",
+          "PCI compliant and secure",
+          "Cancel anytime"
+        ],
+        "screenshot": "https://charj.com/screenshot.png",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "ratingCount": "127"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [{
+          "@type": "Question",
+          "name": "Why do credit card companies close inactive accounts?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Credit card issuers close inactive accounts to reduce risk and administrative costs. Typically, accounts with no activity for 12-24 months are at risk of closure, which can negatively impact your credit score by reducing your available credit and average account age."
+          }
+        }, {
+          "@type": "Question",
+          "name": "How does Charj keep my credit cards active?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Charj automatically charges $1 per year to each credit card you add to our service. This small annual charge keeps the card active in the issuer's system, preventing closure due to inactivity while maintaining your credit history and score."
+          }
+        }, {
+          "@type": "Question",
+          "name": "Is Charj secure and PCI compliant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Charj is powered by Stripe, a industry-leading payment processor. We never store your credit card information. All card data is securely handled by Stripe, which is PCI DSS Level 1 certified - the highest level of security certification in the payments industry."
+          }
+        }, {
+          "@type": "Question",
+          "name": "Can I cancel my subscription at any time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, you can cancel any or all of your card subscriptions at any time through your dashboard. There are no contracts, cancellation fees, or hidden charges. You only pay $1 per card per year for the cards you want to keep active."
+          }
+        }, {
+          "@type": "Question",
+          "name": "How much does Charj cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Charj costs exactly $1 per credit card per year. There are no setup fees, monthly fees, or hidden charges. You only pay for the cards you add to the service, and charges are made annually."
+          }
+        }]
+      }
+    </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-color: #08244d;
+        --secondary-color: #1a4d8f;
+        --accent-color: #FF6B6B;
+        --dark-color: #1a1a2e;
+        --text-color: #333;
+        --light-bg: #f8f9fa;
+        --white: #ffffff;
+        --gradient-1: linear-gradient(135deg, #08244d 0%, #1a4d8f 100%);
+        --gradient-2: linear-gradient(135deg, rgba(8, 36, 77, 0.08) 0%, rgba(26, 77, 143, 0.08) 100%);
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        overflow-x: hidden;
+      }
+
+      /* Typography */
+      h1,
+      h2,
+      h3 {
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--dark-color);
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+      }
+
+      h2 {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+      }
+
+      h3 {
+        font-size: clamp(1.25rem, 3vw, 1.75rem);
+      }
+
+      p {
+        font-size: 1.1rem;
+      }
+
+      /* Header */
+      header {
+        background: var(--white);
+        padding: 0.75rem 1.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .nav-btn {
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: 2px solid var(--primary-color);
+        cursor: pointer;
+        font-size: 0.95rem;
+        background: var(--white);
+        color: var(--primary-color);
+        white-space: nowrap;
+        line-height: 1;
+      }
+
+      .nav-btn:hover {
+        background: var(--primary-color);
+        color: var(--white);
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background: var(--gradient-1);
+        color: var(--white);
+        box-shadow: 0 4px 15px rgba(8, 36, 77, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(8, 36, 77, 0.4);
+      }
+
+      .btn-secondary {
+        background: var(--white);
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--primary-color);
+        color: var(--white);
+      }
+
+      /* Sections */
+      section {
+        padding: 5rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: var(--gradient-2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: '';
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(8, 36, 77, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -250px;
+        right: -250px;
+        animation: pulse 8s ease-in-out infinite;
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(26, 77, 143, 0.12) 0%, transparent 70%);
+        border-radius: 50%;
+        bottom: -200px;
+        left: -200px;
+        animation: pulse 10s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+
+        50% {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+      }
+
+      .hero-content {
+        max-width: 800px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero h1 {
+        margin-bottom: 1.5rem;
+      }
+
+      .hero p {
+        font-size: 1.3rem;
+        margin-bottom: 2.5rem;
+        color: #555;
+      }
+
+      .hero-cta {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* Card Icon Animation */
+      .card-icon {
+        width: 80px;
+        height: 50px;
+        background: var(--gradient-1);
+        border-radius: 8px;
+        margin: 2rem auto;
+        position: relative;
+        animation: float 3s ease-in-out infinite;
+        box-shadow: 0 10px 30px rgba(8, 36, 77, 0.3);
+      }
+
+      .card-icon::before {
+        content: '';
+        position: absolute;
+        width: 60%;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.5);
+        top: 15px;
+        left: 10px;
+        border-radius: 2px;
+      }
+
+      .card-icon::after {
+        content: '';
+        position: absolute;
+        width: 30%;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.3);
+        bottom: 8px;
+        right: 10px;
+        border-radius: 3px;
+      }
+
+      @keyframes float {
+
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Problem Section */
+      .problem {
+        background: var(--light-bg);
+      }
+
+      .problem-content {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .stat {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin: 1rem 0;
+      }
+
+      /* How It Works */
+      .how-it-works h2,
+      .features h2,
+      .pricing h2,
+      .faq h2 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .features h2 {
+        margin-bottom: 3rem;
+      }
+
+      .section-subtitle {
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        color: #666;
+      }
+
+      .how-it-works-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 3rem;
+        margin-top: 3rem;
+      }
+
+      .step {
+        text-align: center;
+        position: relative;
+      }
+
+      .step-number {
+        width: 60px;
+        height: 60px;
+        background: var(--gradient-1);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 4px 15px rgba(8, 36, 77, 0.3);
+      }
+
+      .step h3 {
+        margin-bottom: 1rem;
+      }
+
+      /* Features */
+      .features {
+        background: var(--light-bg);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2.5rem;
+        margin-top: 3rem;
+      }
+
+      .feature {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+      }
+
+      .feature:hover {
+        transform: translateY(-5px);
+      }
+
+      .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      /* Pricing */
+      .pricing-card {
+        max-width: 500px;
+        margin: 3rem auto;
+        background: var(--white);
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border: 3px solid var(--primary-color);
+      }
+
+      .pricing-card p {
+        color: #666;
+        margin-bottom: 2rem;
+      }
+
+      .pricing-card .btn {
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      .price {
+        font-size: 4rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 1rem 0;
+      }
+
+      .price-period {
+        font-size: 1.2rem;
+        color: #666;
+      }
+
+      .pricing-features {
+        list-style: none;
+        margin: 2rem 0;
+        text-align: left;
+      }
+
+      .pricing-features li {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .pricing-features li::before {
+        content: '✓ ';
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-right: 0.5rem;
+      }
+
+      /* FAQ */
+      .faq {
+        background: var(--light-bg);
+      }
+
+      .faq-list {
+        max-width: 800px;
+        margin: 3rem auto 0;
+      }
+
+      details {
+        background: var(--white);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      summary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--dark-color);
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      summary::after {
+        content: '+';
+        font-size: 1.5rem;
+        color: var(--primary-color);
+      }
+
+      details[open] summary::after {
+        content: '−';
+      }
+
+      details p {
+        margin-top: 1rem;
+        color: #555;
+        line-height: 1.8;
+      }
+
+      /* Trust */
+      .trust {
+        text-align: center;
+      }
+
+      .trust-badges {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .badge-icon {
+        font-size: 3rem;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        background: var(--gradient-1);
+        color: var(--white);
+        text-align: center;
+      }
+
+      .cta-section h2 {
+        color: var(--white);
+        margin-bottom: 1.5rem;
+      }
+
+      .cta-section p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      /* Footer */
+      footer {
+        background: var(--dark-color);
+        color: var(--white);
+        padding: 3rem 2rem 2rem;
+        text-align: center;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: var(--white);
+        text-decoration: none;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+      }
+
+      .footer-links a:hover {
+        opacity: 1;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        header {
+          padding: 0.5rem 1rem;
+        }
+
+        .logo {
+          font-size: 1.25rem;
+        }
+
+        .nav-btn {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+        }
+
+        section {
+          padding: 3rem 1.5rem;
+        }
+
+        .hero {
+          min-height: 70vh;
+        }
+
+        .hero-cta {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .features-grid,
+        .how-it-works-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .logo {
+          font-size: 1.1rem;
+        }
+
+        .nav-btn {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <nav>
+        <div class="logo">⚡ Charj</div>
+        <a href="#signup" class="nav-btn" aria-label="Sign up for Charj">Get Started</a>
+      </nav>
+    </header>
+    <!-- Main Content -->
+    <main>
+      <!-- Hero Section -->
+      <section class="hero" id="hero">
+        <div class="hero-content">
+          <div class="card-icon" role="img" aria-label="Credit card icon"></div>
+          <h1>Keep Your Credit Cards Alive</h1>
+          <p>
+            Prevent closures due to inactivity
+            <br />
+            Protect your credit score
+            <br />
+            Just $1/year per card
+          </p>
+          <div class="hero-cta">
+            <a href="#signup" class="btn btn-primary">Get Started</a>
+            <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+          </div>
+        </div>
+      </section>
+      <!-- Problem Section -->
+      <section class="problem" id="problem">
+        <div class="problem-content">
+          <h2>The Inactivity Problem</h2>
+          <p class="stat">12-24 months</p>
+          <p>
+            Credit card companies close inactive accounts after just 12-24 months of no activity. When this happens, you lose valuable credit history, your credit utilization ratio increases, and your credit score drops.
+          </p>
+        </div>
+      </section>
+      <!-- How It Works -->
+      <section class="how-it-works" id="how-it-works">
+        <h2>How Charj Works</h2>
+        <p class="section-subtitle">Simple, automated, and secure. Set it once and forget about it.</p>
+        <div class="how-it-works-grid">
+          <article class="step">
+            <div class="step-number" aria-label="Step 1">1</div>
+            <h3>Add Your Cards</h3>
+            <p>
+              Securely connect the credit cards you want to keep active. All card data is handled by Stripe - we never see or store your card numbers.
+            </p>
+          </article>
+          <article class="step">
+            <div class="step-number" aria-label="Step 2">2</div>
+            <h3>We Charge $1/Year</h3>
+            <p>
+              Once a year, we automatically charge $1 to each card. This small transaction keeps your card active in the issuer's system.
+            </p>
+          </article>
+          <article class="step">
+            <div class="step-number" aria-label="Step 3">3</div>
+            <h3>Your Cards Stay Active</h3>
+            <p>
+              No more surprise closures. Your credit history remains intact, and your credit score stays protected. Manage everything from your dashboard.
+            </p>
+          </article>
+        </div>
+      </section>
+      <!-- Features -->
+      <section class="features" id="features">
+        <h2>Why Choose Charj</h2>
+        <div class="features-grid">
+          <article class="feature">
+            <div class="feature-icon" role="img" aria-label="Security icon">🔒</div>
+            <h3>Bank-Level Security</h3>
+            <p>
+              Powered by Stripe. Your card data is encrypted and PCI DSS Level 1 certified - the highest security standard in payments.
+            </p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" role="img" aria-label="Automation icon">⚙️</div>
+            <h3>Fully Automated</h3>
+            <p>
+              Set it and forget it. Once you add a card, we handle everything automatically. No manual payments, no reminders needed.
+            </p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" role="img" aria-label="Pricing icon">💰</div>
+            <h3>Transparent Pricing</h3>
+            <p>$1 per card per year. No hidden fees, no monthly charges, no surprises. Cancel any card subscription anytime.</p>
+          </article>
+          <article class="feature">
+            <div class="feature-icon" role="img" aria-label="Dashboard icon">📊</div>
+            <h3>Easy Management</h3>
+            <p>
+              Simple dashboard to view all your cards, check payment status, and manage subscriptions. Everything in one place.
+            </p>
+          </article>
+        </div>
+      </section>
+      <!-- Pricing -->
+      <section class="pricing" id="pricing">
+        <h2>Simple, Honest Pricing</h2>
+        <p class="section-subtitle">No contracts. No hidden fees. Cancel anytime.</p>
+        <div class="pricing-card">
+          <h3>Pay Per Card</h3>
+          <div class="price">
+            $1<span class="price-period">/year</span>
+          </div>
+          <p>per credit card</p>
+          <ul class="pricing-features">
+            <li>Automated annual charges</li>
+            <li>Unlimited card management</li>
+            <li>Secure Stripe processing</li>
+            <li>Email notifications</li>
+            <li>24/7 dashboard access</li>
+            <li>Cancel anytime</li>
+          </ul>
+          <a href="#signup" class="btn btn-primary">Start Protecting Your Cards</a>
+        </div>
+      </section>
+      <!-- FAQ -->
+      <section class="faq" id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-list">
+          <details>
+            <summary>Why do credit card companies close inactive accounts?</summary>
+            <p>
+              Credit card issuers close inactive accounts to reduce risk and administrative costs. Typically, accounts with no activity for 12-24 months are at risk of closure, which can negatively impact your credit score by reducing your available credit and average account age.
+            </p>
+          </details>
+          <details>
+            <summary>How does Charj keep my credit cards active?</summary>
+            <p>
+              Charj automatically charges $1 per year to each credit card you add to our service. This small annual charge keeps the card active in the issuer's system, preventing closure due to inactivity while maintaining your credit history and score.
+            </p>
+          </details>
+          <details>
+            <summary>Is Charj secure and PCI compliant?</summary>
+            <p>
+              Yes, Charj is powered by Stripe, an industry-leading payment processor. We never store your credit card information. All card data is securely handled by Stripe, which is PCI DSS Level 1 certified - the highest level of security certification in the payments industry.
+            </p>
+          </details>
+          <details>
+            <summary>Can I cancel my subscription at any time?</summary>
+            <p>
+              Yes, you can cancel any or all of your card subscriptions at any time through your dashboard. There are no contracts, cancellation fees, or hidden charges. You only pay $1 per card per year for the cards you want to keep active.
+            </p>
+          </details>
+          <details>
+            <summary>How much does Charj cost?</summary>
+            <p>
+              Charj costs exactly $1 per credit card per year. There are no setup fees, monthly fees, or hidden charges. You only pay for the cards you add to the service, and charges are made annually.
+            </p>
+          </details>
+          <details>
+            <summary>What happens if a payment fails?</summary>
+            <p>
+              If an annual charge fails (e.g., due to an expired card or insufficient funds), we'll notify you immediately via email. You can update your payment method through your dashboard. We'll retry the payment automatically, and your card will remain in our system.
+            </p>
+          </details>
+          <details>
+            <summary>How many credit cards can I add?</summary>
+            <p>
+              There's no limit! You can add as many credit cards as you want to keep active. Each card is charged separately at $1 per year.
+            </p>
+          </details>
+          <details>
+            <summary>Will the $1 charge affect my credit score?</summary>
+            <p>
+              No, a small $1 annual charge will not negatively impact your credit score. In fact, it helps by keeping your cards active and maintaining your credit history. The positive impact of preserving account age and available credit far outweighs any minimal effect from the charge itself.
+            </p>
+          </details>
+        </div>
+      </section>
+      <!-- Trust Indicators -->
+      <section class="trust" id="trust">
+        <h2>Trusted & Secure</h2>
+        <div class="trust-badges">
+          <div class="badge">
+            <div class="badge-icon" role="img" aria-label="Stripe logo">💳</div>
+            <strong>Powered by Stripe</strong>
+            <p>Industry-leading payments</p>
+          </div>
+          <div class="badge">
+            <div class="badge-icon" role="img" aria-label="PCI compliant badge">🔐</div>
+            <strong>PCI DSS Level 1</strong>
+            <p>Highest security certification</p>
+          </div>
+          <div class="badge">
+            <div class="badge-icon" role="img" aria-label="Encryption badge">🛡️</div>
+            <strong>256-bit Encryption</strong>
+            <p>Bank-level security</p>
+          </div>
+        </div>
+      </section>
+      <!-- Final CTA -->
+      <section class="cta-section" id="signup">
+        <h2>Ready to Protect Your Credit Cards?</h2>
+        <p>Join hundreds of users keeping their credit history intact</p>
+        <a href="{% url 'account_signup' %}" class="btn btn-secondary">Get Started Now - $1/Year</a>
+      </section>
+    </main>
+    <!-- Footer -->
+    <footer>
+      <div class="footer-links">
+        <a href="{% url 'account_login' %}">Sign In</a>
+      </div>
+      <p>© 2024 Charj. All rights reserved. Keeping your credit cards alive, one charge at a time.</p>
+    </footer>
+    <!-- Simple smooth scroll -->
+    <script>
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

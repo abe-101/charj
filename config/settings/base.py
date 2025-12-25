@@ -116,7 +116,6 @@ LOGIN_URL = "account_login"
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     # Public pages
     "home",
-    "about",
 ]
 
 # PASSWORDS
