@@ -283,6 +283,7 @@ class TestCardDisplayService:
         card_with_active = CardDisplay(
             payment_method_id="pm_1",
             brand="visa",
+            brand_image="visa.png",
             last4="4242",
             exp_month=12,
             exp_year=2030,
@@ -297,6 +298,7 @@ class TestCardDisplayService:
         card_without_sub = CardDisplay(
             payment_method_id="pm_2",
             brand="mastercard",
+            brand_image="mastercard.png",
             last4="5555",
             exp_month=6,
             exp_year=2029,
@@ -309,6 +311,7 @@ class TestCardDisplayService:
         card_canceled = CardDisplay(
             payment_method_id="pm_3",
             brand="amex",
+            brand_image="amex.png",
             last4="1234",
             exp_month=3,
             exp_year=2028,

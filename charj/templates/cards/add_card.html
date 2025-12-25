@@ -15,30 +15,91 @@
       height: 40px;
       padding-top: 10px;
     }
+
+    .charge-breakdown {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .charge-item {
+      flex: 1;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+
+    .charge-label {
+      font-size: 0.875rem;
+      color: #6c757d;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .charge-amount {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #212529;
+      margin: 0;
+    }
   </style>
   <div class="container mt-4">
     <div class="row justify-content-center">
-      <div class="col-md-6">
+      <div class="col-md-7">
         <h2 class="mb-4">Add Credit Card</h2>
+        <!-- What You'll Be Charged Panel -->
+        <div class="alert alert-info border-primary mb-4">
+          <h5 class="alert-heading mb-3">💳 What You'll Be Charged</h5>
+          <div class="charge-breakdown">
+            <div class="charge-item">
+              <span class="charge-label">Today</span>
+              <h3 class="charge-amount">$1</h3>
+            </div>
+            <div class="charge-item">
+              <span class="charge-label">Next Charge</span>
+              <h3 class="charge-amount" id="next-charge-display">$1 in 1 year</h3>
+              <small class="text-muted" id="next-charge-date"></small>
+            </div>
+          </div>
+          <hr class="my-3" />
+          <ul class="mb-2 small">
+            <li class="mb-1">✅ Cancel anytime - no future charges</li>
+            <li class="mb-1">✅ Each card has its own subscription</li>
+            <li class="mb-1">✅ Keeps cards active, prevents closure</li>
+          </ul>
+          <div class="alert alert-warning mb-0 small py-2">
+            <strong>💡 Recommended:</strong> Enable auto-pay on your card to ensure uninterrupted service. Most banks let you set this up online or in their app.
+          </div>
+        </div>
+        <!-- Alerts -->
         <div id="card-errors" class="alert alert-danger hidden" role="alert"></div>
         <div id="card-success" class="alert alert-success hidden" role="alert"></div>
+        <!-- Payment Form -->
         <form id="payment-form">
           {% csrf_token %}
           <div class="mb-3">
-            <label for="card-element" class="form-label">Credit or debit card</label>
+            <label for="card-element" class="form-label fw-bold">Credit or debit card</label>
             <div id="card-element" class="form-control">
               <!-- Stripe Elements will be inserted here -->
             </div>
           </div>
           <button id="submit-button" class="btn btn-primary w-100" type="submit">
-            <span id="button-text">Add Card</span>
+            <span id="button-text">Add Card & Pay $1</span>
             <span id="spinner"
                   class="spinner-border spinner-border-sm hidden"
                   role="status"
                   aria-hidden="true"></span>
           </button>
-          <p class="mt-3 text-muted small">This will create an annual $1 subscription to keep your card active.</p>
         </form>
+        <!-- Trust Badges -->
+        <div class="text-center mt-4">
+          <small class="text-muted">
+            🔒 Secured by Stripe • PCI Compliant
+            <br />
+            Your card details never touch our servers
+          </small>
+        </div>
       </div>
     </div>
   </div>
@@ -74,6 +135,37 @@
       } else {
         document.getElementById('card-errors').classList.add('hidden');
       }
+    });
+
+    // Calculate and display next charge date on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const nextYear = new Date();
+      nextYear.setFullYear(nextYear.getFullYear() + 1);
+
+      const formattedLong = nextYear.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      const formattedShort = nextYear.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+
+      const displayEl = document.getElementById('next-charge-display');
+      const dateEl = document.getElementById('next-charge-date');
+
+      if (displayEl) {
+        displayEl.textContent = '$1';
+      }
+      if (dateEl) {
+        dateEl.textContent = formattedLong;
+      }
+
+      // Store for success message
+      window.nextChargeDateFormatted = formattedShort;
     });
 
     document.getElementById('payment-form').addEventListener('submit', async function(event) {
@@ -128,10 +220,15 @@
           throw new Error(errorData.error || 'Failed to create subscription');
         }
 
-        showSuccess('Card added successfully! Redirecting...');
+        // Success! Show message with charge details
+        const nextChargeDate = window.nextChargeDateFormatted || 'in 1 year';
+        showSuccess(
+          `✅ Card added successfully! You've been charged $1 today. Next charge: ${nextChargeDate}. Redirecting...`
+        );
+
         setTimeout(() => {
-          window.location.href = '{% url "users:detail" request.user.pk %}';
-        }, 2000);
+          window.location.href = '{% url "cards:dashboard" %}';
+        }, 3000);
 
       } catch (error) {
         console.error('Error:', error);
@@ -146,7 +243,7 @@
       const spinner = document.getElementById('spinner');
 
       submitButton.disabled = isLoading;
-      buttonText.textContent = isLoading ? 'Processing...' : 'Add Card';
+      buttonText.textContent = isLoading ? 'Processing...' : 'Add Card & Pay $1';
       if (isLoading) {
         spinner.classList.remove('hidden');
       } else {
