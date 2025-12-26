@@ -16,7 +16,7 @@
           content="Keep your credit cards active with automatic $1 annual charges. Prevent account closures and protect your credit score." />
     <meta name="author" content="Abe Hanoka" />
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
-    {% compress css %}
+    {% block css %}
       <!-- Latest compiled and minified Bootstrap CSS -->
       <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
@@ -25,12 +25,14 @@
             referrerpolicy="no-referrer" />
       <!-- Your stuff: Third-party CSS libraries go here -->
       <!-- This file stores project-specific CSS -->
-      <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-    {% endcompress %}
+      {% compress css %}
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+      {% endcompress %}
+    {% endblock css %}
     <!-- Le javascript
     ================================================== -->
     {# Placed at the top of the document so pages load faster with defer #}
-    {% compress javascript %}
+    {% block javascript %}
       <!-- Bootstrap JS -->
       <script defer
               src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
@@ -39,8 +41,10 @@
               referrerpolicy="no-referrer"></script>
       <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- place project specific Javascript in this file -->
-      <script defer src="{% static 'js/project.js' %}"></script>
-    {% endcompress %}
+      {% compress js %}
+        <script defer src="{% static 'js/project.js' %}"></script>
+      {% endcompress %}
+    {% endblock javascript %}
   </head>
   <body class="{% block bodyclass %}{% endblock bodyclass %}">
     {% block body %}
