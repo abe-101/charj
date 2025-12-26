@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/cookiecutter/cookiecutter-django",
-  "commit": "5deda24cd621f02cbadcec77411ee148467a8bd7",
+  "commit": "6a8206c8a477ff43e3d14dc9bbca352216f4db44",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -22,7 +22,7 @@
       "mail_service": "Mailjet",
       "use_async": "n",
       "use_drf": "n",
-      "frontend_pipeline": "None",
+      "frontend_pipeline": "Django Compressor",
       "use_celery": "n",
       "use_mailpit": "y",
       "use_sentry": "y",
