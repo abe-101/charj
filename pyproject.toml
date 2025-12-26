@@ -149,6 +149,7 @@ dev = [
     "django-coverage-plugin==3.2.0",
     "pytest-django==4.11.1",
     "responses>=0.25.8",
+    "rich>=14.2.0",
 ]
 
 [project]
@@ -187,4 +188,5 @@ dependencies = [
     "attrs>=25.4.0",
     "libsass>=0.23.0",
     "django-libsass>=0.9",
+    "python-json-logger>=4.0.0",
 ]

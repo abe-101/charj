@@ -26,6 +26,10 @@ class DashboardView(TemplateView):
         cards_data = get_user_cards(self.request.user)
         context["cards_data"] = cards_data
         context["has_cards"] = len(cards_data) > 0
+        logger.info(
+            "Dashboard data loaded",
+            extra={"card_count": len(cards_data), "has_cards": len(cards_data) > 0},
+        )
         return context
 
 
@@ -76,6 +80,7 @@ class AddCardView(TemplateView):
     template_name = "cards/add_card.html"
 
     def get_context_data(self, **kwargs):
+        logger.info("Add card page accessed")
         context = super().get_context_data(**kwargs)
         context["stripe_public_key"] = settings.STRIPE_PUBLIC_KEY
         return context
