@@ -189,4 +189,5 @@ dependencies = [
     "libsass>=0.23.0",
     "django-libsass>=0.9",
     "python-json-logger>=4.0.0",
+    "posthog==7.0.1",
 ]
