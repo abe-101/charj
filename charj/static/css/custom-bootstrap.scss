@@ -1,0 +1,27 @@
+// Custom Bootstrap Variables
+// Override Bootstrap's default variables BEFORE importing Bootstrap
+
+// Primary brand color
+$primary: #08244d;
+
+// You can customize additional colors:
+$secondary: #6c757d;
+$success: #198754;
+$danger: #dc3545;
+$warning: #ffc107;
+$info: #0dcaf0;
+
+// Typography customization examples:
+$font-family-base: 'Your Custom Font', sans-serif;
+$font-size-base: 1rem;
+$h1-font-size: 2.5rem;
+
+// Spacing customization:
+$spacer: 1rem;
+
+// Border radius customization:
+$border-radius: 0.375rem;
+
+// Import Bootstrap SCSS
+// Path assumes you've downloaded Bootstrap SCSS to charj/static/vendor/bootstrap/scss/
+@import "../vendor/bootstrap/scss/bootstrap";

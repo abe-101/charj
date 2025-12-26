@@ -185,4 +185,6 @@ dependencies = [
     "dj-stripe>=2.10.3",
     "stripe>=14.1.0",
     "attrs>=25.4.0",
+    "libsass>=0.23.0",
+    "django-libsass>=0.9",
 ]
