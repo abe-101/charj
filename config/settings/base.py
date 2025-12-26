@@ -155,6 +155,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "config.logging.RequestContextMiddleware",  # Add request context to logs
     "config.middleware.CustomLoginRequiredMiddleware",  # Custom middleware that supports OPEN_URLS
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -268,11 +269,17 @@ LOGGING = {
             "json_ensure_ascii": False,
         },
     },
+    "filters": {
+        "request_context": {
+            "()": "config.logging.RequestContextFilter",
+        },
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
             "class": "rich.logging.RichHandler",
             "formatter": "json",
+            "filters": ["request_context"],
             "rich_tracebacks": True,
             "tracebacks_show_locals": True,
             "markup": True,
