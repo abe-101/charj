@@ -12,7 +12,7 @@ due to inactivity.
 ## Tech Stack
 - **Backend:** Django (cookiecutter-django template)
 - **Payment Processing:** Stripe + dj-stripe
-- **Frontend:** Bootstrap + Stripe Elements (JavaScript)
+- **Frontend:** Bootstrap 5 + Stripe Elements (JavaScript)
 - **Database:** PostgreSQL (via cookiecutter defaults)
 
 ## User Flow
@@ -251,6 +251,24 @@ Email configuration in local settings:
 - Bootstrap 5 for styling (crispy-bootstrap5)
 - Max line length: 119 characters
 - 2-space indentation
+
+### Bootstrap & Styling
+
+**IMPORTANT:** This project customizes Bootstrap via SCSS for consistency and maintainability.
+
+- **Always prefer Bootstrap classes** over custom CSS whenever possible
+- **Customize Bootstrap variables and components** in `charj/static/css/custom-bootstrap.scss`
+- **Never use inline `<style>` tags** in templates - add styles to the SCSS file instead
+- Bootstrap is compiled via django-compressor with SCSS support
+- Custom component classes are defined in `custom-bootstrap.scss` after the Bootstrap import
+
+Example workflow:
+1. Use Bootstrap utility classes first (e.g., `.mb-3`, `.text-muted`, `.d-flex`)
+2. If custom styling is needed, add it to `custom-bootstrap.scss`
+3. Define reusable component classes (e.g., `.card-logo`, `.summary-card`)
+4. Override Bootstrap variables before the `@import` statement for global changes
+
+This approach ensures visual consistency across all pages and makes the design system maintainable.
 
 ## Important Patterns
 
