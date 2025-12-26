@@ -149,11 +149,17 @@ LOGGING = {
             "json_ensure_ascii": False,
         },
     },
+    "filters": {
+        "request_context": {
+            "()": "config.logging.RequestContextFilter",
+        },
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "json",
+            "filters": ["request_context"],
         },
     },
     "root": {"level": "INFO", "handlers": ["console"]},
