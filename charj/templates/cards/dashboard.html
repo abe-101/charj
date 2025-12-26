@@ -109,7 +109,7 @@
                   <p class="card-text text-muted small mb-1">Keep another card active.</p>
                   <ul class="small text-muted mb-3 ps-3">
                     <li>$1 charged today</li>
-                    <li>Then $1 once per year</li>
+                    <li>Then $1 annually</li>
                   </ul>
                   <a href="{% url 'cards:add' %}" class="btn btn-primary btn-sm">Add Card</a>
                 </div>
@@ -122,11 +122,10 @@
                   <p class="card-text text-muted small mb-1">Stripe's secure portal lets you:</p>
                   <ul class="small text-muted mb-3 ps-3">
                     <li>View billing history</li>
-                    <li>Update payment methods</li>
                     <li>Cancel subscriptions</li>
                   </ul>
                   <a href="{% url 'cards:customer_portal' %}"
-                     class="btn btn-secondary btn-sm">Open Stripe Portal →</a>
+                     class="btn btn-secondary btn-sm">Open Portal →</a>
                 </div>
               </div>
             </div>

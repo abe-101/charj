@@ -1,45 +1,643 @@
 // Custom Bootstrap Variables
 // Override Bootstrap's default variables BEFORE importing Bootstrap
 
-// Primary brand color
-$primary: #08244d;
+// ============================================================================
+// CHARJ DESIGN SYSTEM - Refined Financial Aesthetic
+// ============================================================================
+// A distinctive, trustworthy design for a premium fintech service
+// Combines editorial sophistication with subtle luxury touches
+// ============================================================================
 
-// You can customize additional colors:
-$secondary: #6c757d;
-$success: #198754;
-$danger: #dc3545;
-$warning: #ffc107;
-$info: #0dcaf0;
-$light: #f8f9fa;
+// Brand Colors - Chase Ink Blue + Warm Gold
+$charj-navy: #08244d;            // Primary navy (Chase Ink blue)
+$charj-navy-dark: #061936;       // Darkest navy
+$charj-navy-medium: #0d3564;     // Medium navy
+$charj-navy-light: #14467a;      // Light navy for hovers
+$charj-gold: #d4a574;            // Warm gold accent
+$charj-gold-light: #e4c4a4;      // Light gold
+$charj-gold-dark: #b8895f;       // Dark gold
+$charj-cream: #faf8f5;           // Warm off-white background
+$charj-cream-dark: #f0ebe5;      // Darker cream
 
-// Typography customization
-$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-$font-family-monospace: 'Courier New', Consolas, Monaco, monospace;
-$font-size-base: 1rem;
-$h1-font-size: 2.5rem;
+// Bootstrap Color Overrides
+$primary: $charj-navy;
+$secondary: $charj-gold;
+$success: #2d6a4f;               // Forest green
+$danger: #c1666b;                // Muted red
+$warning: #d4a574;               // Gold
+$info: #4a7c9e;                  // Soft blue
+$light: $charj-cream;
+$dark: $charj-navy-dark;
 
-// Spacing customization
+// Typography - Distinctive Serif + Clean Sans-Serif
+$font-family-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+$font-family-base: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+$font-family-monospace: 'SF Mono', 'Monaco', 'Courier New', monospace;
+$font-size-base: 1.0625rem;      // 17px - slightly larger for readability
+$line-height-base: 1.65;         // Generous line height
+
+// Heading Sizes
+$h1-font-size: 3.25rem;          // 52px
+$h2-font-size: 2.5rem;           // 40px
+$h3-font-size: 1.875rem;         // 30px
+$h4-font-size: 1.5rem;           // 24px
+$h5-font-size: 1.25rem;          // 20px
+$h6-font-size: 1.0625rem;        // 17px
+
+// Headings use display font
+$headings-font-family: $font-family-display;
+$headings-font-weight: 600;
+$headings-line-height: 1.2;
+$headings-color: $charj-navy;  // Use primary navy instead of black
+
+// Spacing - Generous breathing room
 $spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4.5,
+  7: $spacer * 6,
+);
 
-// Border radius customization
-$border-radius: 0.375rem;
-$border-radius-sm: 0.25rem;
-$border-radius-lg: 0.5rem;
-$border-radius-xl: 0.75rem;
+// Border Radius - Refined, not too round
+$border-radius: 0.5rem;
+$border-radius-sm: 0.375rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+$border-radius-xxl: 1.5rem;
 
-// Card customization
-$card-border-radius: 0.5rem;
-$card-border-color: #dee2e6;
+// Card customization - Elegant shadows
+$card-border-radius: $border-radius-lg;
+$card-border-color: rgba($charj-navy, 0.08);
+$card-border-width: 1px;
+$card-box-shadow: 0 2px 8px rgba($charj-navy-dark, 0.06);
+$card-cap-bg: transparent;
 
 // Badge customization
-$badge-border-radius: 50rem; // pill shape
+$badge-border-radius: 0.375rem;  // Subtle rounded, not full pill
+$badge-font-weight: 500;
+$badge-padding-y: 0.375em;
+$badge-padding-x: 0.75em;
+
+// Button customization
+$btn-border-radius: $border-radius;
+$btn-border-radius-lg: $border-radius-lg;
+$btn-font-weight: 500;
+$btn-padding-y: 0.75rem;
+$btn-padding-x: 1.5rem;
+$btn-padding-y-lg: 1rem;
+$btn-padding-x-lg: 2rem;
+
+// Body
+$body-bg: $charj-cream;
+$body-color: #3d5a80;  // Softer navy-gray for body text
 
 // Import Bootstrap SCSS
-// Path assumes you've downloaded Bootstrap SCSS to charj/static/vendor/bootstrap/scss/
 @import "../vendor/bootstrap/scss/bootstrap";
 
-// Custom Component Styles
-// These are reusable components specific to our application
+// ============================================================================
+// CUSTOM COMPONENT STYLES
+// ============================================================================
+
+// Typography Enhancements
+// ============================================================================
+
+// Display heading utility class
+.display-serif {
+  font-family: $font-family-display;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+// Body text with display font
+.text-serif {
+  font-family: $font-family-display;
+}
+
+// Subtle text animation
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// ============================================================================
+// LANDING PAGE STYLES
+// ============================================================================
+
+.landing-page {
+  // Hero Section
+  .hero-section {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, $charj-cream 0%, $charj-cream-dark 100%);
+    position: relative;
+    overflow: hidden;
+
+    // Subtle background pattern
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.03;
+      background-image:
+        radial-gradient(circle at 25% 25%, $charj-navy 2px, transparent 2px),
+        radial-gradient(circle at 75% 75%, $charj-gold 2px, transparent 2px);
+      background-size: 50px 50px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-family: $font-family-display;
+      font-weight: 600;
+      color: $charj-navy;  // Primary Chase Ink blue
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+
+      // Gold accent on key word
+      .accent {
+        color: $charj-gold-dark;
+        position: relative;
+        display: inline-block;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0.1em;
+          left: 0;
+          right: 0;
+          height: 0.15em;
+          background: linear-gradient(90deg, $charj-gold-light, $charj-gold);
+          opacity: 0.4;
+        }
+      }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+      color: $charj-navy-medium;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+
+      &:last-of-type {
+        margin-bottom: 2.5rem;
+      }
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .btn {
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &.btn-primary {
+          background: $charj-navy;
+          border-color: $charj-navy;
+          box-shadow: 0 4px 14px rgba($charj-navy, 0.3);
+
+          &:hover {
+            background: $charj-navy-light;
+            border-color: $charj-navy-light;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba($charj-navy, 0.4);
+          }
+        }
+
+        &.btn-outline-secondary {
+          color: $charj-gold-dark;
+          border-color: $charj-gold;
+          border-width: 2px;
+
+          &:hover {
+            background: $charj-gold;
+            border-color: $charj-gold;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  // Trust Badge
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 8px rgba($charj-navy, 0.08);
+    font-size: 0.9375rem;
+    color: $charj-navy-medium;
+    margin-top: 2rem;
+
+    .badge-icon {
+      font-size: 1.25rem;
+    }
+  }
+
+  // Section Base Styles
+  section {
+    padding: 5rem 0;
+
+    &.bg-light {
+      background: white !important;
+    }
+
+    &.bg-navy {
+      background: $charj-navy;
+      color: white;
+
+      h2, h3, h4, h5, h6 {
+        color: white;
+      }
+    }
+  }
+
+  // Section Headers
+  .section-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+
+    .section-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: $charj-gold-dark;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+
+    .section-description {
+      font-size: 1.125rem;
+      color: $charj-navy-medium;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+  }
+
+  // Feature Cards
+  .feature-card {
+    height: 100%;
+    padding: 2.5rem;
+    background: white;
+    border: 1px solid rgba($charj-navy, 0.08);
+    border-radius: $border-radius-xl;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba($charj-navy, 0.12);
+      border-color: $charj-gold-light;
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, $charj-gold-light, $charj-gold);
+      border-radius: $border-radius-lg;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: $charj-navy-medium;
+      margin: 0;
+    }
+  }
+
+  // How It Works Steps
+  .step-card {
+    position: relative;
+    padding: 2rem;
+    background: white;
+    border-radius: $border-radius-lg;
+    border: 1px solid rgba($charj-navy, 0.08);
+    height: 100%;
+
+    .step-number {
+      position: absolute;
+      top: -1.25rem;
+      left: 2rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      background: $charj-gold;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.125rem;
+      box-shadow: 0 4px 12px rgba($charj-gold, 0.3);
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.375rem;
+    }
+
+    p {
+      color: $charj-navy-medium;
+      margin: 0;
+    }
+  }
+
+  // Pricing Card
+  .pricing-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem;
+    background: white;
+    border: 2px solid $charj-gold;
+    border-radius: $border-radius-xxl;
+    box-shadow: 0 16px 48px rgba($charj-navy, 0.12);
+
+    .price-tag {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba($charj-navy, 0.1);
+
+      .price {
+        font-size: 4.5rem;
+        font-weight: 700;
+        font-family: $font-family-display;
+        color: $charj-navy;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+
+        .currency {
+          font-size: 2.5rem;
+          vertical-align: top;
+        }
+      }
+
+      .price-period {
+        font-size: 1.125rem;
+        color: $charj-navy-medium;
+      }
+
+      .price-description {
+        margin-top: 1rem;
+        color: $charj-navy-medium;
+      }
+    }
+
+    .pricing-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem 0;
+
+      li {
+        padding: 0.875rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        border-bottom: 1px solid rgba($charj-navy, 0.08);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &::before {
+          content: '✓';
+          color: $charj-gold-dark;
+          font-weight: 700;
+          font-size: 1.25rem;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  // FAQ Section
+  .faq-item {
+    margin-bottom: 1rem;
+    background: white;
+    border: 1px solid rgba($charj-navy, 0.08);
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+
+    details {
+      summary {
+        padding: 1.5rem;
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: $charj-navy;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: rgba($charj-gold, 0.05);
+        }
+
+        &::after {
+          content: '+';
+          font-size: 1.5rem;
+          color: $charj-gold;
+          font-weight: 400;
+          transition: transform 0.2s ease;
+        }
+      }
+
+      &[open] summary::after {
+        transform: rotate(45deg);
+      }
+
+      .faq-answer {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+        color: $charj-navy-medium;
+        line-height: 1.7;
+      }
+    }
+  }
+
+  // Stats/Numbers
+  .stat-card {
+    text-align: center;
+    padding: 2rem 1rem;
+
+    .stat-number {
+      font-size: 3.5rem;
+      font-weight: 700;
+      font-family: $font-family-display;
+      color: $charj-gold;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1.125rem;
+      color: $charj-navy-medium;
+    }
+  }
+
+  // CTA Section
+  .cta-section {
+    padding: 5rem 0;
+    background: $charj-navy;
+    color: white;
+    text-align: center;
+
+    h2 {
+      color: white;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn {
+      &.btn-secondary {
+        background: $charj-gold;
+        border-color: $charj-gold;
+        color: $charj-navy-dark;
+
+        &:hover {
+          background: $charj-gold-light;
+          border-color: $charj-gold-light;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  // Footer
+  footer {
+    background: $charj-navy-dark;
+    color: rgba(white, 0.8);
+    padding: 3rem 0 2rem;
+    text-align: center;
+
+    a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $charj-gold-light;
+      }
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// ============================================================================
+// NAVIGATION BAR STYLES
+// ============================================================================
+
+.navbar {
+  background: white !important;
+  border-bottom: 1px solid rgba($charj-navy, 0.08);
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba($charj-navy, 0.04);
+
+  .navbar-brand {
+    font-family: $font-family-display;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: $charj-navy !important;
+    letter-spacing: -0.02em;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $charj-gold-dark !important;
+    }
+  }
+
+  .nav-link {
+    font-weight: 500;
+    color: $charj-navy-medium !important;
+    padding: 0.5rem 1rem !important;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $charj-gold-dark !important;
+    }
+
+    &.active {
+      color: $charj-navy !important;
+    }
+  }
+}
+
+// ============================================================================
+// DASHBOARD/APP COMPONENT STYLES
+// ============================================================================
 
 // Card Logo Display
 .card-logo {
@@ -49,8 +647,8 @@ $badge-border-radius: 50rem; // pill shape
   width: 60px;
   height: 38px;
   border-radius: $border-radius;
-  background: $light;
-  border: 1px solid $card-border-color;
+  background: white;
+  border: 1px solid rgba($charj-navy, 0.1);
   padding: 0.25rem;
 
   img {
@@ -64,16 +662,17 @@ $badge-border-radius: 50rem; // pill shape
 .card-list-item {
   display: flex;
   align-items: center;
-  padding: 1rem;
-  border: 1px solid $card-border-color;
+  padding: 1.25rem;
+  border: 1px solid rgba($charj-navy, 0.1);
   border-radius: $card-border-radius;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   background: white;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
-    border-color: #adb5bd;
+    box-shadow: 0 4px 16px rgba($charj-navy, 0.1);
+    border-color: $charj-gold-light;
+    transform: translateY(-2px);
   }
 }
 
@@ -88,18 +687,18 @@ $badge-border-radius: 50rem; // pill shape
   font-family: $font-family-monospace;
   font-size: 1rem;
   font-weight: 600;
-  color: $body-color;
+  color: $charj-navy;
   margin-bottom: 0.25rem;
 }
 
 .card-expiry {
   font-size: 0.875rem;
-  color: $text-muted;
+  color: $charj-navy-medium;
 }
 
 .card-next-charge {
   font-size: 0.875rem;
-  color: $body-color;
+  color: $charj-navy-medium;
   margin-top: 0.25rem;
 }
 
@@ -111,39 +710,58 @@ $badge-border-radius: 50rem; // pill shape
   flex-wrap: wrap;
 }
 
-// Summary Card (Gradient card for dashboard)
+// Summary Card (Dashboard header card)
 .summary-card {
-  background: linear-gradient(135deg, $primary 0%, darken($primary, 10%) 100%);
+  background: linear-gradient(135deg, $charj-navy 0%, $charj-navy-medium 100%);
   color: white;
   border: none;
   border-radius: $border-radius-xl;
-  padding: 1.5rem;
+  padding: 2rem;
   margin-bottom: 2rem;
+  box-shadow: 0 8px 24px rgba($charj-navy, 0.2);
 
-  h5 {
+  // Force all text to be white/light on dark background
+  h1, h2, h3, h4, h5, h6 {
+    color: white !important;
     font-weight: 600;
     margin-bottom: 0.5rem;
   }
 
+  p, small, strong {
+    color: white !important;
+  }
+
   .display-4 {
+    color: white !important;
     font-weight: 700;
+    font-family: $font-family-display;
+  }
+
+  .opacity-90 {
+    opacity: 0.9;
+  }
+
+  .opacity-75 {
+    opacity: 0.75;
   }
 }
 
 // Empty State
 .empty-state-icon {
-  font-size: 3rem;
-  color: #adb5bd;
+  font-size: 3.5rem;
   margin-bottom: 1rem;
+  opacity: 0.3;
 }
 
 // Quick Action Cards
 .quick-action-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  border: 1px solid rgba($charj-navy, 0.08);
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba($charj-navy, 0.12) !important;
+    border-color: $charj-gold-light;
   }
 }
 
@@ -156,4 +774,48 @@ $badge-border-radius: 50rem; // pill shape
 // Utility Classes
 .max-width-400 {
   max-width: 400px;
+}
+
+// ============================================================================
+// ERROR PAGE STYLES
+// ============================================================================
+
+.error-page-container {
+  padding: 5rem 0;
+}
+
+.error-number {
+  font-size: 6rem;
+  font-family: $font-family-display;
+  font-weight: 700;
+  color: $charj-gold;
+  line-height: 1;
+}
+
+.error-title {
+  font-family: $font-family-display;
+  color: $charj-navy;
+}
+
+.error-description {
+  color: $charj-navy-medium;
+}
+
+// Responsive Typography
+@media (max-width: 768px) {
+  .landing-page {
+    .hero-section {
+      min-height: auto;
+      padding: 4rem 0;
+    }
+
+    section {
+      padding: 3rem 0;
+    }
+
+    .feature-card,
+    .step-card {
+      margin-bottom: 1.5rem;
+    }
+  }
 }

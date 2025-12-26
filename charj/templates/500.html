@@ -4,9 +4,19 @@
   Server Error
 {% endblock title %}
 {% block content %}
-  <h1>Ooops!!! 500</h1>
-  <h3>Looks like something went wrong!</h3>
-  <p>
-    We track these errors automatically, but if the problem persists feel free to contact us. In the meantime, try refreshing.
-  </p>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 text-center error-page-container">
+        <div class="error-number">500</div>
+        <h1 class="mt-4 mb-3 error-title">Something Went Wrong</h1>
+        <p class="lead mb-4 error-description">
+          We track these errors automatically, but if the problem persists, please try refreshing the page or contact support.
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+          <a href="{% url 'home' %}" class="btn btn-primary">Go Home</a>
+          <button onclick="location.reload()" class="btn btn-outline-secondary">Refresh Page</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
