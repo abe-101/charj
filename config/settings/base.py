@@ -299,7 +299,11 @@ ACCOUNT_FORMS = {"signup": "charj.users.forms.UserSignupForm"}
 SOCIALACCOUNT_ADAPTER = "charj.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "charj.users.forms.UserSocialSignupForm"}
-
+# django-compressor
+# ------------------------------------------------------------------------------
+# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
+INSTALLED_APPS += ["compressor"]
+STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 
 # Your stuff...
 # ------------------------------------------------------------------------------
