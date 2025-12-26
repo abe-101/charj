@@ -28,10 +28,7 @@ def create_stripe_customer(
             logger.warning(
                 "Orphaned Stripe customer attached to user",
                 extra={
-                    "event": "NEEDS_EVENT",
                     "customer_id": customer.id,
-                    "user_id": user.pk,
-                    "email": user.email,
                 },
             )
             customer.subscriber = user
@@ -42,9 +39,6 @@ def create_stripe_customer(
             logger.info(
                 "Stripe customer created with trial subscription",
                 extra={
-                    "event": "NEEDS_EVENT",
                     "customer_id": customer.id,
-                    "user_id": user.pk,
-                    "email": user.email,
                 },
             )
