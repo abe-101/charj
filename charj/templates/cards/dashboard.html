@@ -6,117 +6,6 @@
   Card Management
 {% endblock title %}
 {% block content %}
-  <style>
-    .card-logo {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 60px;
-      height: 38px;
-      border-radius: 6px;
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
-      padding: 4px;
-    }
-
-    .card-logo img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .card-list-item {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      margin-bottom: 0.75rem;
-      background: white;
-      transition: all 0.2s ease;
-    }
-
-    .card-list-item:hover {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      border-color: #adb5bd;
-    }
-
-    .card-info {
-      flex: 1;
-      margin-left: 1rem;
-      min-width: 0;
-    }
-
-    .card-number {
-      font-family: 'Courier New', monospace;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #212529;
-      margin-bottom: 0.25rem;
-    }
-
-    .card-expiry {
-      font-size: 0.875rem;
-      color: #6c757d;
-    }
-
-    .card-next-charge {
-      font-size: 0.875rem;
-      color: #495057;
-      margin-top: 0.25rem;
-    }
-
-    .card-badges {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .badge-pill {
-      border-radius: 50px;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .empty-state-icon {
-      font-size: 3rem;
-      color: #adb5bd;
-      margin-bottom: 1rem;
-    }
-
-    .summary-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .summary-card h5 {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .summary-card .display-4 {
-      font-weight: 700;
-    }
-
-    .quick-action-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .quick-action-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .max-width-400 {
-      max-width: 400px;
-    }
-  </style>
   <div class="container mt-4">
     <div class="row justify-content-center">
       <div class="col-lg-8">
@@ -159,19 +48,19 @@
                   {% endif %}
                 </div>
                 <div class="card-badges">
-                  {% if card.is_default %}<span class="badge bg-primary badge-pill">Default</span>{% endif %}
+                  {% if card.is_default %}<span class="badge bg-primary rounded-pill">Default</span>{% endif %}
                   {% if card.is_active %}
-                    <span class="badge bg-success badge-pill">Active</span>
+                    <span class="badge bg-success rounded-pill">Active</span>
                   {% elif card.subscription_status == "past_due" %}
-                    <span class="badge bg-warning text-dark badge-pill">Past Due</span>
+                    <span class="badge bg-warning text-dark rounded-pill">Past Due</span>
                   {% elif card.subscription_status == "canceled" %}
-                    <span class="badge bg-secondary badge-pill">Canceled</span>
+                    <span class="badge bg-secondary rounded-pill">Canceled</span>
                   {% elif card.subscription_status == "incomplete" %}
-                    <span class="badge bg-info text-dark badge-pill">Incomplete</span>
+                    <span class="badge bg-info text-dark rounded-pill">Incomplete</span>
                   {% elif card.has_subscription %}
-                    <span class="badge bg-secondary badge-pill">{{ card.subscription_status|title }}</span>
+                    <span class="badge bg-secondary rounded-pill">{{ card.subscription_status|title }}</span>
                   {% else %}
-                    <span class="badge bg-warning text-dark badge-pill">No Subscription</span>
+                    <span class="badge bg-warning text-dark rounded-pill">No Subscription</span>
                   {% endif %}
                 </div>
               </div>
