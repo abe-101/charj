@@ -26,7 +26,7 @@
       <!-- Your stuff: Third-party CSS libraries go here -->
       <!-- This file stores project-specific CSS -->
       <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-    {% endcompress css %}
+    {% endcompress %}
     <!-- Le javascript
     ================================================== -->
     {# Placed at the top of the document so pages load faster with defer #}
@@ -40,7 +40,7 @@
       <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- place project specific Javascript in this file -->
       <script defer src="{% static 'js/project.js' %}"></script>
-    {% endcompress javascript %}
+    {% endcompress %}
   </head>
   <body class="{% block bodyclass %}{% endblock bodyclass %}">
     {% block body %}
