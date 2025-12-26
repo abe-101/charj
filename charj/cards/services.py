@@ -1,11 +1,19 @@
 """Service layer for card management functionality."""
 
+import logging
 from datetime import UTC
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 import attrs
 from djstripe.models import Customer
 from djstripe.models import PaymentMethod
+
+if TYPE_CHECKING:
+    from djstripe.models import Subscription
+
+
+logger = logging.getLogger(__name__)
 
 # Card brand name mapping: Stripe brand → filename
 CARD_BRAND_IMAGES = {
@@ -13,10 +21,10 @@ CARD_BRAND_IMAGES = {
     "mastercard": "mastercard.png",
     "amex": "amex.png",
     "discover": "discover.png",
-    "diners": "diners.png",
-    "jcb": "jcb.png",
-    "unionpay": "unionpay.png",
-    "cartes_bancaires": "cartes_bancaires.png",
+    # "diners": "diners.png",  # noqa: ERA001
+    # "jcb": "jcb.png",  # noqa: ERA001
+    # "unionpay": "unionpay.png",  # noqa: ERA001
+    # "cartes_bancaires": "cartes_bancaires.png",  # noqa: ERA001
 }
 
 FALLBACK_CARD_IMAGE = "card.png"  # Generic card icon fallback
@@ -86,10 +94,15 @@ def get_user_cards(user) -> list[CardDisplay]:
     # Build card display objects
     cards = []
     for pm in payment_methods:
+        pm: PaymentMethod  # type hint for IDEs
         card_data = pm.stripe_data.get("card", {})
 
         # Skip if not a card type
-        if pm.stripe_data.get("type") != "card":
+        if pm.type != "card":
+            logger.exception(
+                msg="Unexpected payment method type",
+                extra={"payment_method_id": pm.id, "type": pm.type},
+            )
             continue
 
         # Find subscription using this payment method and extract data
@@ -98,12 +111,13 @@ def get_user_cards(user) -> list[CardDisplay]:
         next_billing_date = None
 
         for sub in customer.subscriptions.all():
-            if sub.stripe_data.get("default_payment_method") == pm.id:
-                subscription_status = sub.stripe_data.get("status")
+            sub: Subscription  # type hint for IDEs
+            if sub.default_payment_method == pm.id:
+                subscription_status = sub.status
                 subscription_id = sub.id
 
                 # Extract next billing date from current_period_end
-                current_period_end = sub.stripe_data.get("current_period_end")
+                current_period_end = sub.current_period_end
                 if current_period_end:
                     # current_period_end is Unix timestamp
                     next_billing_date = datetime.fromtimestamp(
