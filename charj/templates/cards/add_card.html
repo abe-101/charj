@@ -6,99 +6,71 @@
   Add Card
 {% endblock title %}
 {% block content %}
-  <style>
-    .hidden {
-      display: none;
-    }
-
-    #card-element {
-      height: 40px;
-      padding-top: 10px;
-    }
-
-    .charge-breakdown {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .charge-item {
-      flex: 1;
-      padding: 1rem;
-      background: white;
-      border-radius: 8px;
-      border: 1px solid #e9ecef;
-    }
-
-    .charge-label {
-      font-size: 0.875rem;
-      color: #6c757d;
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    .charge-amount {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #212529;
-      margin: 0;
-    }
-  </style>
   <div class="container mt-4">
     <div class="row justify-content-center">
-      <div class="col-md-7">
+      <div class="col-md-6 col-lg-5">
         <h2 class="mb-4">Add Credit Card</h2>
-        <!-- What You'll Be Charged Panel -->
-        <div class="alert alert-info border-primary mb-4">
-          <h5 class="alert-heading mb-3">💳 What You'll Be Charged</h5>
-          <div class="charge-breakdown">
-            <div class="charge-item">
-              <span class="charge-label">Today</span>
-              <h3 class="charge-amount">$1</h3>
+        <!-- Pricing Summary -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <div class="text-muted small mb-1">Charged today</div>
+                <div class="h2 mb-0 fw-bold">$1</div>
+              </div>
+              <div class="text-end">
+                <div class="text-muted small mb-1">Then annually</div>
+                <div class="h2 mb-0 fw-bold">
+                  $1<span class="h6 text-muted fw-normal">/year</span>
+                </div>
+              </div>
             </div>
-            <div class="charge-item">
-              <span class="charge-label">Next Charge</span>
-              <h3 class="charge-amount" id="next-charge-display">$1 in 1 year</h3>
-              <small class="text-muted" id="next-charge-date"></small>
+            <div class="border-top pt-3">
+              <div class="small text-muted mb-2">
+                <div class="mb-1">✓ Cancel anytime - no future charges</div>
+                <div class="mb-1">✓ Each card gets its own subscription</div>
+                <div>✓ Keeps your card active and prevents closure</div>
+              </div>
             </div>
-          </div>
-          <hr class="my-3" />
-          <ul class="mb-2 small">
-            <li class="mb-1">✅ Cancel anytime - no future charges</li>
-            <li class="mb-1">✅ Each card has its own subscription</li>
-            <li class="mb-1">✅ Keeps cards active, prevents closure</li>
-          </ul>
-          <div class="alert alert-warning mb-0 small py-2">
-            <strong>💡 Recommended:</strong> Enable auto-pay on your card to ensure uninterrupted service. Most banks let you set this up online or in their app.
           </div>
         </div>
-        <!-- Alerts -->
-        <div id="card-errors" class="alert alert-danger hidden" role="alert"></div>
-        <div id="card-success" class="alert alert-success hidden" role="alert"></div>
-        <!-- Payment Form -->
+        <!-- Card Form -->
+        <div id="card-errors" class="alert alert-danger d-none mb-3" role="alert"></div>
+        <div id="card-success"
+             class="alert alert-success d-none mb-3"
+             role="alert"></div>
         <form id="payment-form">
           {% csrf_token %}
           <div class="mb-3">
-            <label for="card-element" class="form-label fw-bold">Credit or debit card</label>
+            <label for="card-element" class="form-label fw-semibold">Card details</label>
             <div id="card-element" class="form-control">
               <!-- Stripe Elements will be inserted here -->
             </div>
           </div>
-          <button id="submit-button" class="btn btn-primary w-100" type="submit">
-            <span id="button-text">Add Card & Pay $1</span>
+          <button id="submit-button"
+                  class="btn btn-primary btn-lg w-100 mb-3"
+                  type="submit">
+            <span id="button-text">Pay $1 & Add Card</span>
             <span id="spinner"
-                  class="spinner-border spinner-border-sm hidden"
+                  class="spinner-border spinner-border-sm d-none ms-2"
                   role="status"
                   aria-hidden="true"></span>
           </button>
         </form>
-        <!-- Trust Badges -->
-        <div class="text-center mt-4">
-          <small class="text-muted">
-            🔒 Secured by Stripe • PCI Compliant
-            <br />
-            Your card details never touch our servers
-          </small>
+        <!-- Trust Indicators -->
+        <div class="text-center">
+          <div class="small text-muted">
+            <span class="me-2">🔒 Secured by Stripe</span>
+            <span>• PCI Compliant</span>
+          </div>
+          <div class="small text-muted mt-1">Your card details are handled securely</div>
+        </div>
+        <!-- Auto-pay Recommendation -->
+        <div class="alert alert-light border mt-4 mb-0">
+          <div class="small">
+            <strong class="text-body">💡 Pro tip:</strong>
+            <span class="text-muted">Set up auto-pay on your card to avoid late fees. Set it and forget it.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -133,7 +105,7 @@
       if (event.error) {
         showError(event.error.message);
       } else {
-        document.getElementById('card-errors').classList.add('hidden');
+        document.getElementById('card-errors').classList.add('d-none');
       }
     });
 
@@ -142,27 +114,11 @@
       const nextYear = new Date();
       nextYear.setFullYear(nextYear.getFullYear() + 1);
 
-      const formattedLong = nextYear.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
       const formattedShort = nextYear.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric'
       });
-
-      const displayEl = document.getElementById('next-charge-display');
-      const dateEl = document.getElementById('next-charge-date');
-
-      if (displayEl) {
-        displayEl.textContent = '$1';
-      }
-      if (dateEl) {
-        dateEl.textContent = formattedLong;
-      }
 
       // Store for success message
       window.nextChargeDateFormatted = formattedShort;
@@ -243,20 +199,20 @@
       const spinner = document.getElementById('spinner');
 
       submitButton.disabled = isLoading;
-      buttonText.textContent = isLoading ? 'Processing...' : 'Add Card & Pay $1';
+      buttonText.textContent = isLoading ? 'Processing...' : 'Pay $1 & Add Card';
       if (isLoading) {
-        spinner.classList.remove('hidden');
+        spinner.classList.remove('d-none');
       } else {
-        spinner.classList.add('hidden');
+        spinner.classList.add('d-none');
       }
     }
 
     function showError(message) {
       const errorDiv = document.getElementById('card-errors');
       const successDiv = document.getElementById('card-success');
-      successDiv.classList.add('hidden');
+      successDiv.classList.add('d-none');
       errorDiv.textContent = message;
-      errorDiv.classList.remove('hidden');
+      errorDiv.classList.remove('d-none');
       errorDiv.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest'
@@ -266,9 +222,9 @@
     function showSuccess(message) {
       const errorDiv = document.getElementById('card-errors');
       const successDiv = document.getElementById('card-success');
-      errorDiv.classList.add('hidden');
+      errorDiv.classList.add('d-none');
       successDiv.textContent = message;
-      successDiv.classList.remove('hidden');
+      successDiv.classList.remove('d-none');
       successDiv.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest'
