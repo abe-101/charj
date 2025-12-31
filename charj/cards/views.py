@@ -87,26 +87,23 @@ class AddCardView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["stripe_public_key"] = settings.STRIPE_PUBLIC_KEY
         # Pricing configuration for frontend
-        context["min_amount_cents"] = getattr(settings, "STRIPE_MIN_AMOUNT_CENTS", 50)
-        context["max_amount_cents"] = getattr(
-            settings,
-            "STRIPE_MAX_AMOUNT_CENTS",
-            100000,
-        )
-        context["allowed_intervals"] = getattr(
-            settings,
-            "STRIPE_ALLOWED_INTERVALS",
-            ["day", "week", "month", "year"],
-        )
-        context["max_interval_count"] = getattr(
-            settings,
-            "STRIPE_MAX_INTERVAL_COUNT",
-            36,
-        )
-        # Default values ($1/year)
-        context["default_amount_cents"] = 100
-        context["default_interval"] = "year"
-        context["default_interval_count"] = 1
+        min_amount_cents = getattr(settings, "STRIPE_MIN_AMOUNT_CENTS", 50)
+        max_amount_cents = getattr(settings, "STRIPE_MAX_AMOUNT_CENTS", 100000)
+        max_interval_count = getattr(settings, "STRIPE_MAX_INTERVAL_COUNT", 36)
+
+        # For template display
+        context["min_amount_dollars"] = min_amount_cents / 100
+        context["max_interval_count"] = max_interval_count
+
+        # JSON config for JavaScript (uses json_script template tag)
+        context["pricing_config"] = {
+            "minAmountCents": min_amount_cents,
+            "maxAmountCents": max_amount_cents,
+            "maxIntervalCount": max_interval_count,
+            "defaultAmountCents": 100,
+            "defaultInterval": "year",
+            "defaultIntervalCount": 1,
+        }
         return context
 
 

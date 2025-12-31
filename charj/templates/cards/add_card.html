@@ -102,7 +102,7 @@
                 </div>
               </div>
               <div class="small text-muted">
-                Min: ${{ min_amount_cents|floatformat:0|divisibleby:100|default:"0.50" }} | Max: $1,000 | Intervals: 1-{{ max_interval_count }}
+                Min: ${{ min_amount_dollars }} | Max: $1,000 | Intervals: 1-{{ max_interval_count }}
               </div>
             </div>
             <!-- Dynamic Pricing Summary -->
@@ -172,37 +172,11 @@
   </div>
 {% endblock content %}
 {% block inline_javascript %}
+  {{ pricing_config|json_script:"pricing-config" }}
   <script src="https://js.stripe.com/v3/"></script>
   <script>
     // Pricing configuration from backend
-    const PRICING_CONFIG = {
-      minAmountCents: {
-        {
-          min_amount_cents
-        }
-      },
-      maxAmountCents: {
-        {
-          max_amount_cents
-        }
-      },
-      maxIntervalCount: {
-        {
-          max_interval_count
-        }
-      },
-      defaultAmountCents: {
-        {
-          default_amount_cents
-        }
-      },
-      defaultInterval: '{{ default_interval }}',
-      defaultIntervalCount: {
-        {
-          default_interval_count
-        }
-      }
-    };
+    const PRICING_CONFIG = JSON.parse(document.getElementById('pricing-config').textContent);
 
     // Current pricing state
     let currentPricing = {

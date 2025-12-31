@@ -168,7 +168,7 @@ class TestCreateSubscriptionView:
         data = json.loads(response.content)
         assert "payment_method_id" in data["error"]
 
-    def test_validates_product_id_configured(
+    def test_rejects_when_product_id_not_configured(
         self,
         user: User,
         rf: RequestFactory,

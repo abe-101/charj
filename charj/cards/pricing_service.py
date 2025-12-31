@@ -37,7 +37,7 @@ def validate_pricing_parameters(
     min_amount = getattr(settings, "STRIPE_MIN_AMOUNT_CENTS", 50)
     max_amount = getattr(settings, "STRIPE_MAX_AMOUNT_CENTS", 100000)
 
-    if not isinstance(amount_cents, int) or amount_cents < min_amount:
+    if amount_cents < min_amount:
         msg = f"Amount must be at least {min_amount} cents (${min_amount / 100:.2f})"
         raise InvalidPricingParametersError(msg)
     if amount_cents > max_amount:
