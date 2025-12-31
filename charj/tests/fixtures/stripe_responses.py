@@ -278,3 +278,144 @@ CUSTOMER_PORTAL_SESSION_RESPONSE = {
     "return_url": "http://127.0.0.1:8000/cards/",
     "url": "https://billing.stripe.com/p/session/test_123",
 }
+
+
+# Price creation response
+def make_price_response(
+    price_id="price_test_dynamic",
+    amount=100,
+    interval="year",
+    interval_count=1,
+    lookup_key=None,
+):
+    """Generate a Price response with custom parameters."""
+    if lookup_key is None:
+        lookup_key = f"{interval}_{interval_count}_{amount}"
+    return {
+        "id": price_id,
+        "object": "price",
+        "active": True,
+        "billing_scheme": "per_unit",
+        "created": 1766545465,
+        "currency": "usd",
+        "custom_unit_amount": None,
+        "livemode": False,
+        "lookup_key": lookup_key,
+        "metadata": {
+            "created_by": "charj_pricing_service",
+            "amount_cents": str(amount),
+            "interval": interval,
+            "interval_count": str(interval_count),
+        },
+        "nickname": None,
+        "product": "prod_test_123",
+        "recurring": {
+            "interval": interval,
+            "interval_count": interval_count,
+            "meter": None,
+            "trial_period_days": None,
+            "usage_type": "licensed",
+        },
+        "tax_behavior": "unspecified",
+        "tiers_mode": None,
+        "transform_quantity": None,
+        "type": "recurring",
+        "unit_amount": amount,
+        "unit_amount_decimal": str(amount),
+    }
+
+
+PRICE_RESPONSE = make_price_response()
+
+
+# Price list (search by lookup_key) response - empty
+PRICE_LIST_EMPTY_RESPONSE = {
+    "object": "list",
+    "data": [],
+    "has_more": False,
+    "url": "/v1/prices",
+}
+
+
+# Price list (search by lookup_key) response - with result
+def make_price_list_response(prices=None):
+    """Generate a Price list response with optional prices."""
+    if prices is None:
+        prices = []
+    return {
+        "object": "list",
+        "data": prices,
+        "has_more": False,
+        "url": "/v1/prices",
+    }
+
+
+# Product response
+PRODUCT_RESPONSE = {
+    "id": "prod_test_123",
+    "object": "product",
+    "active": True,
+    "created": 1766545465,
+    "default_price": None,
+    "description": "Charj card keep-alive service",
+    "images": [],
+    "livemode": False,
+    "metadata": {},
+    "name": "Charj Keep-Alive",
+    "package_dimensions": None,
+    "shippable": None,
+    "statement_descriptor": None,
+    "tax_code": None,
+    "type": "service",
+    "unit_label": None,
+    "updated": 1766545465,
+    "url": None,
+}
+
+
+# Account response (needed for djstripe syncing)
+ACCOUNT_RESPONSE = {
+    "id": "acct_test_123",
+    "object": "account",
+    "business_profile": {
+        "mcc": None,
+        "name": "Test Account",
+        "product_description": None,
+        "support_address": None,
+        "support_email": None,
+        "support_phone": None,
+        "support_url": None,
+        "url": None,
+    },
+    "capabilities": {},
+    "charges_enabled": True,
+    "country": "US",
+    "created": 1766545465,
+    "default_currency": "usd",
+    "details_submitted": True,
+    "email": "test@example.com",
+    "external_accounts": {"object": "list", "data": [], "has_more": False},
+    "metadata": {},
+    "payouts_enabled": True,
+    "settings": {
+        "branding": {
+            "icon": None,
+            "logo": None,
+            "primary_color": None,
+            "secondary_color": None,
+        },
+        "card_payments": {"statement_descriptor_prefix": None},
+        "dashboard": {"display_name": "Test", "timezone": "Etc/UTC"},
+        "payments": {
+            "statement_descriptor": None,
+            "statement_descriptor_kana": None,
+            "statement_descriptor_kanji": None,
+        },
+        "payouts": {
+            "debit_negative_balances": True,
+            "schedule": {"delay_days": 2, "interval": "daily"},
+            "statement_descriptor": None,
+        },
+    },
+    "type": "standard",
+}

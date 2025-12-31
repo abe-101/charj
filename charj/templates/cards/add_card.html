@@ -10,23 +10,114 @@
     <div class="row justify-content-center">
       <div class="col-md-6 col-lg-5">
         <h2 class="mb-4">Add Credit Card</h2>
-        <!-- Pricing Summary -->
+        <!-- Pricing Selection -->
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div>
-                <div class="text-muted small mb-1">Charged today</div>
-                <div class="h2 mb-0 fw-bold">$1</div>
-              </div>
-              <div class="text-end">
-                <div class="text-muted small mb-1">Then annually</div>
-                <div class="h2 mb-0 fw-bold">
-                  $1<span class="h6 text-muted fw-normal">/year</span>
-                </div>
+            <h6 class="text-muted mb-3">Choose Your Charge Amount & Frequency</h6>
+            <!-- Preset Options -->
+            <div class="preset-options mb-3">
+              <div class="btn-group-vertical w-100"
+                   role="group"
+                   aria-label="Preset pricing options">
+                <input type="radio"
+                       class="btn-check"
+                       name="pricing-preset"
+                       id="preset-1-year"
+                       value="preset"
+                       data-amount="100"
+                       data-interval="year"
+                       data-interval-count="1"
+                       checked />
+                <label class="btn btn-outline-primary text-start d-flex justify-content-between align-items-center"
+                       for="preset-1-year">
+                  <span><strong>$1</strong> per year</span>
+                  <span class="badge bg-success">Recommended</span>
+                </label>
+                <input type="radio"
+                       class="btn-check"
+                       name="pricing-preset"
+                       id="preset-1-month"
+                       value="preset"
+                       data-amount="100"
+                       data-interval="month"
+                       data-interval-count="1" />
+                <label class="btn btn-outline-primary text-start" for="preset-1-month">
+                  <strong>$1</strong> per month
+                </label>
+                <input type="radio"
+                       class="btn-check"
+                       name="pricing-preset"
+                       id="preset-5-month"
+                       value="preset"
+                       data-amount="500"
+                       data-interval="month"
+                       data-interval-count="1" />
+                <label class="btn btn-outline-primary text-start" for="preset-5-month">
+                  <strong>$5</strong> per month
+                </label>
+                <input type="radio"
+                       class="btn-check"
+                       name="pricing-preset"
+                       id="preset-custom"
+                       value="custom" />
+                <label class="btn btn-outline-secondary text-start" for="preset-custom">
+                  <strong>Custom amount...</strong>
+                </label>
               </div>
             </div>
-            <div class="border-top pt-3">
-              <div class="small text-muted mb-2">
+            <!-- Custom Pricing Controls (hidden by default) -->
+            <div id="custom-pricing-controls" class="d-none">
+              <div class="row g-2 mb-3">
+                <div class="col-5">
+                  <label for="custom-amount" class="form-label small">Amount</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           id="custom-amount"
+                           min="0.50"
+                           max="1000"
+                           step="0.01"
+                           value="1.00"
+                           placeholder="1.00" />
+                  </div>
+                </div>
+                <div class="col-4">
+                  <label for="custom-interval" class="form-label small">Every</label>
+                  <select class="form-select" id="custom-interval">
+                    <option value="day">Day</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="year" selected>Year</option>
+                  </select>
+                </div>
+                <div class="col-3">
+                  <label for="custom-interval-count" class="form-label small">Count</label>
+                  <input type="number"
+                         class="form-control"
+                         id="custom-interval-count"
+                         min="1"
+                         max="36"
+                         value="1" />
+                </div>
+              </div>
+              <div class="small text-muted">
+                Min: ${{ min_amount_cents|floatformat:0|divisibleby:100|default:"0.50" }} | Max: $1,000 | Intervals: 1-{{ max_interval_count }}
+              </div>
+            </div>
+            <!-- Dynamic Pricing Summary -->
+            <div class="border-top pt-3 mt-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted">Charged today:</span>
+                <span class="h5 mb-0 fw-bold" id="summary-amount">$1</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted">Then:</span>
+                <span class="fw-semibold" id="summary-frequency">$1/year</span>
+              </div>
+            </div>
+            <div class="border-top pt-3 mt-3">
+              <div class="small text-muted">
                 <div class="mb-1">✓ Cancel anytime - no future charges</div>
                 <div class="mb-1">✓ Each card gets its own subscription</div>
                 <div>✓ Keeps your card active and prevents closure</div>
@@ -83,6 +174,43 @@
 {% block inline_javascript %}
   <script src="https://js.stripe.com/v3/"></script>
   <script>
+    // Pricing configuration from backend
+    const PRICING_CONFIG = {
+      minAmountCents: {
+        {
+          min_amount_cents
+        }
+      },
+      maxAmountCents: {
+        {
+          max_amount_cents
+        }
+      },
+      maxIntervalCount: {
+        {
+          max_interval_count
+        }
+      },
+      defaultAmountCents: {
+        {
+          default_amount_cents
+        }
+      },
+      defaultInterval: '{{ default_interval }}',
+      defaultIntervalCount: {
+        {
+          default_interval_count
+        }
+      }
+    };
+
+    // Current pricing state
+    let currentPricing = {
+      amountCents: PRICING_CONFIG.defaultAmountCents,
+      interval: PRICING_CONFIG.defaultInterval,
+      intervalCount: PRICING_CONFIG.defaultIntervalCount
+    };
+
     const stripe = Stripe('{{ stripe_public_key }}');
     const elements = stripe.elements();
 
@@ -113,20 +241,129 @@
       }
     });
 
-    // Calculate and display next charge date on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      const nextYear = new Date();
-      nextYear.setFullYear(nextYear.getFullYear() + 1);
+    // Format currency for display
+    function formatCurrency(cents) {
+      const dollars = cents / 100;
+      if (dollars === Math.floor(dollars)) {
+        return '$' + dollars;
+      }
+      return '$' + dollars.toFixed(2);
+    }
 
-      const formattedShort = nextYear.toLocaleDateString('en-US', {
+    // Format frequency for display
+    function formatFrequency(interval, intervalCount) {
+      if (intervalCount === 1) {
+        const names = {
+          day: 'day',
+          week: 'week',
+          month: 'month',
+          year: 'year'
+        };
+        return '/' + names[interval];
+      }
+      const plurals = {
+        day: 'days',
+        week: 'weeks',
+        month: 'months',
+        year: 'years'
+      };
+      return ' every ' + intervalCount + ' ' + plurals[interval];
+    }
+
+    // Update the pricing summary display
+    function updatePricingSummary() {
+      const amountDisplay = formatCurrency(currentPricing.amountCents);
+      const frequencyDisplay = amountDisplay + formatFrequency(currentPricing.interval, currentPricing.intervalCount);
+
+      document.getElementById('summary-amount').textContent = amountDisplay;
+      document.getElementById('summary-frequency').textContent = frequencyDisplay;
+      document.getElementById('button-text').textContent = 'Pay ' + amountDisplay + ' & Add Card';
+    }
+
+    // Handle preset selection
+    document.querySelectorAll('input[name="pricing-preset"]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        const customControls = document.getElementById('custom-pricing-controls');
+
+        if (this.value === 'custom') {
+          customControls.classList.remove('d-none');
+          // Use values from custom inputs
+          updateFromCustomInputs();
+        } else {
+          customControls.classList.add('d-none');
+          // Use preset values
+          currentPricing.amountCents = parseInt(this.dataset.amount);
+          currentPricing.interval = this.dataset.interval;
+          currentPricing.intervalCount = parseInt(this.dataset.intervalCount);
+          updatePricingSummary();
+        }
+      });
+    });
+
+    // Update pricing from custom inputs
+    function updateFromCustomInputs() {
+      const amountInput = document.getElementById('custom-amount');
+      const intervalSelect = document.getElementById('custom-interval');
+      const intervalCountInput = document.getElementById('custom-interval-count');
+
+      let amountDollars = parseFloat(amountInput.value) || 1;
+      let amountCents = Math.round(amountDollars * 100);
+
+      // Clamp to valid range
+      amountCents = Math.max(PRICING_CONFIG.minAmountCents, Math.min(PRICING_CONFIG.maxAmountCents, amountCents));
+
+      let intervalCount = parseInt(intervalCountInput.value) || 1;
+      intervalCount = Math.max(1, Math.min(PRICING_CONFIG.maxIntervalCount, intervalCount));
+
+      currentPricing.amountCents = amountCents;
+      currentPricing.interval = intervalSelect.value;
+      currentPricing.intervalCount = intervalCount;
+
+      updatePricingSummary();
+    }
+
+    // Listen to custom input changes
+    document.getElementById('custom-amount').addEventListener('input', function() {
+      if (document.getElementById('preset-custom').checked) {
+        updateFromCustomInputs();
+      }
+    });
+
+    document.getElementById('custom-interval').addEventListener('change', function() {
+      if (document.getElementById('preset-custom').checked) {
+        updateFromCustomInputs();
+      }
+    });
+
+    document.getElementById('custom-interval-count').addEventListener('input', function() {
+      if (document.getElementById('preset-custom').checked) {
+        updateFromCustomInputs();
+      }
+    });
+
+    // Calculate next charge date
+    function calculateNextChargeDate(interval, intervalCount) {
+      const nextDate = new Date();
+      switch (interval) {
+        case 'day':
+          nextDate.setDate(nextDate.getDate() + intervalCount);
+          break;
+        case 'week':
+          nextDate.setDate(nextDate.getDate() + (7 * intervalCount));
+          break;
+        case 'month':
+          nextDate.setMonth(nextDate.getMonth() + intervalCount);
+          break;
+        case 'year':
+          nextDate.setFullYear(nextDate.getFullYear() + intervalCount);
+          break;
+      }
+      return nextDate.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric'
       });
-
-      // Store for success message
-      window.nextChargeDateFormatted = formattedShort;
-    });
+    }
 
     document.getElementById('payment-form').addEventListener('submit', async function(event) {
       event.preventDefault();
@@ -163,7 +400,7 @@
 
         if (error) throw new Error(error.message);
 
-        // Step 3: Create subscription
+        // Step 3: Create subscription with custom pricing
         const subscriptionResponse = await fetch('{% url "cards:create_subscription" %}', {
           method: 'POST',
           headers: {
@@ -171,7 +408,10 @@
             'X-CSRFToken': getCsrfToken()
           },
           body: JSON.stringify({
-            payment_method_id: setupIntent.payment_method
+            payment_method_id: setupIntent.payment_method,
+            amount_cents: currentPricing.amountCents,
+            interval: currentPricing.interval,
+            interval_count: currentPricing.intervalCount
           })
         });
 
@@ -181,9 +421,10 @@
         }
 
         // Success! Show message with charge details
-        const nextChargeDate = window.nextChargeDateFormatted || 'in 1 year';
+        const amountDisplay = formatCurrency(currentPricing.amountCents);
+        const nextChargeDate = calculateNextChargeDate(currentPricing.interval, currentPricing.intervalCount);
         showSuccess(
-          `✅ Card added successfully! You've been charged $1 today. Next charge: ${nextChargeDate}. Redirecting...`
+          'Card added successfully! You\'ve been charged ' + amountDisplay + ' today. Next charge: ' + nextChargeDate + '. Redirecting...'
         );
 
         setTimeout(() => {
@@ -199,14 +440,14 @@
 
     function setLoading(isLoading) {
       const submitButton = document.getElementById('submit-button');
-      const buttonText = document.getElementById('button-text');
       const spinner = document.getElementById('spinner');
 
       submitButton.disabled = isLoading;
-      buttonText.textContent = isLoading ? 'Processing...' : 'Pay $1 & Add Card';
       if (isLoading) {
+        document.getElementById('button-text').textContent = 'Processing...';
         spinner.classList.remove('d-none');
       } else {
+        updatePricingSummary(); // Reset button text
         spinner.classList.add('d-none');
       }
     }
@@ -238,5 +479,10 @@
     function getCsrfToken() {
       return document.querySelector('[name=csrfmiddlewaretoken]').value;
     }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updatePricingSummary();
+    });
   </script>
 {% endblock inline_javascript %}

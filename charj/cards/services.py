@@ -58,6 +58,9 @@ class CardDisplay:
     subscription_status: str | None = None
     subscription_id: str | None = None
     next_billing_date: datetime | None = None
+    subscription_amount_cents: int | None = None
+    subscription_interval: str | None = None
+    subscription_interval_count: int | None = None
 
     @property
     def has_subscription(self) -> bool:
@@ -68,6 +71,68 @@ class CardDisplay:
     def is_active(self) -> bool:
         """Check if card has active subscription."""
         return self.subscription_status == "active"
+
+    @property
+    def subscription_amount_display(self) -> str | None:
+        """Return formatted amount like '$5.00' or '$5' for whole dollars."""
+        if self.subscription_amount_cents is None:
+            return None
+        dollars = self.subscription_amount_cents / 100
+        if dollars == int(dollars):
+            return f"${int(dollars)}"
+        return f"${dollars:.2f}"
+
+    @property
+    def subscription_frequency_display(self) -> str | None:
+        """Return human-readable frequency like 'monthly' or 'every 3 months'."""
+        if not self.subscription_interval:
+            return None
+        count = self.subscription_interval_count or 1
+        if count == 1:
+            interval_names = {
+                "day": "daily",
+                "week": "weekly",
+                "month": "monthly",
+                "year": "yearly",
+            }
+            return interval_names.get(
+                self.subscription_interval,
+                f"{self.subscription_interval}ly",
+            )
+        plural_intervals = {
+            "day": "days",
+            "week": "weeks",
+            "month": "months",
+            "year": "years",
+        }
+        interval_plural = plural_intervals.get(
+            self.subscription_interval,
+            f"{self.subscription_interval}s",
+        )
+        return f"every {count} {interval_plural}"
+
+    @property
+    def subscription_price_display(self) -> str | None:
+        """Return combined price/frequency like '$5/month'."""
+        amount = self.subscription_amount_display
+        if not amount:
+            return None
+        if not self.subscription_interval:
+            return amount
+        count = self.subscription_interval_count or 1
+        if count == 1:
+            return f"{amount}/{self.subscription_interval}"
+        plural_intervals = {
+            "day": "days",
+            "week": "weeks",
+            "month": "months",
+            "year": "years",
+        }
+        interval_plural = plural_intervals.get(
+            self.subscription_interval,
+            f"{self.subscription_interval}s",
+        )
+        return f"{amount} every {count} {interval_plural}"
 
 
 def get_user_cards(user) -> list[CardDisplay]:
@@ -109,6 +174,9 @@ def get_user_cards(user) -> list[CardDisplay]:
         subscription_status = None
         subscription_id = None
         next_billing_date = None
+        subscription_amount_cents = None
+        subscription_interval = None
+        subscription_interval_count = None
 
         for sub in customer.subscriptions.all():
             sub: Subscription  # type hint for IDEs
@@ -123,6 +191,31 @@ def get_user_cards(user) -> list[CardDisplay]:
                     next_billing_date = datetime.fromtimestamp(
                         current_period_end,
                         tz=UTC,
+                    )
+
+                # Extract price details from subscription items
+                try:
+                    sub_items = sub.items.all()
+                    if sub_items:
+                        first_item = sub_items[0]
+                        price = first_item.price
+                        if price:
+                            subscription_amount_cents = price.unit_amount
+                            # Get recurring info from stripe_data
+                            recurring = price.stripe_data.get("recurring", {})
+                            subscription_interval = recurring.get("interval")
+                            subscription_interval_count = recurring.get(
+                                "interval_count",
+                                1,
+                            )
+                except Exception:  # noqa: BLE001 - Continue gracefully if price data missing
+                    logger.warning(
+                        "Failed to extract price details from subscription",
+                        exc_info=True,
+                        extra={
+                            "subscription_id": subscription_id,
+                            "payment_method_id": pm.id,
+                        },
                     )
 
                 break
@@ -141,6 +234,9 @@ def get_user_cards(user) -> list[CardDisplay]:
                 subscription_status=subscription_status,
                 subscription_id=subscription_id,
                 next_billing_date=next_billing_date,
+                subscription_amount_cents=subscription_amount_cents,
+                subscription_interval=subscription_interval,
+                subscription_interval_count=subscription_interval_count,
             ),
         )
 

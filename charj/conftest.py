@@ -1,3 +1,5 @@
+import re
+
 import pytest
 import responses
 
@@ -55,6 +57,14 @@ def mock_stripe_api():
             status=200,
         )
 
+        # Mock PaymentMethod detach (for cleanup on subscription failure)
+        rsps.add(
+            responses.POST,
+            re.compile(r"https://api\.stripe\.com/v1/payment_methods/.*/detach"),
+            json=stripe_fixtures.PAYMENT_METHOD_RESPONSE,
+            status=200,
+        )
+
         # Mock Subscription creation
         rsps.add(
             responses.POST,
@@ -68,6 +78,39 @@ def mock_stripe_api():
             responses.POST,
             "https://api.stripe.com/v1/billing_portal/sessions",
             json=stripe_fixtures.CUSTOMER_PORTAL_SESSION_RESPONSE,
+            status=200,
+        )
+
+        # Mock Price list (lookup by lookup_key) - returns empty by default
+        # Tests that need prices can override this
+        rsps.add(
+            responses.GET,
+            re.compile(r"https://api\.stripe\.com/v1/prices.*"),
+            json=stripe_fixtures.PRICE_LIST_EMPTY_RESPONSE,
+            status=200,
+        )
+
+        # Mock Price creation
+        rsps.add(
+            responses.POST,
+            "https://api.stripe.com/v1/prices",
+            json=stripe_fixtures.PRICE_RESPONSE,
+            status=200,
+        )
+
+        # Mock Product retrieval (needed by djstripe's Price.sync_from_stripe_data)
+        rsps.add(
+            responses.GET,
+            re.compile(r"https://api\.stripe\.com/v1/products/.*"),
+            json=stripe_fixtures.PRODUCT_RESPONSE,
+            status=200,
+        )
+
+        # Mock Account retrieval (needed by djstripe syncing)
+        rsps.add(
+            responses.GET,
+            "https://api.stripe.com/v1/account",
+            json=stripe_fixtures.ACCOUNT_RESPONSE,
             status=200,
         )
 
