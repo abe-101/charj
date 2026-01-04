@@ -106,12 +106,4 @@ def mock_stripe_api():
             status=200,
         )
 
-        # Mock Account retrieval (needed by djstripe syncing)
-        rsps.add(
-            responses.GET,
-            "https://api.stripe.com/v1/account",
-            json=stripe_fixtures.ACCOUNT_RESPONSE,
-            status=200,
-        )
-
         yield rsps
