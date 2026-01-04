@@ -1,0 +1,348 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Primary Meta Tags -->
+    <title>About Charj - Meet the Founder | Credit Card Keep-Alive Service</title>
+    <meta name="title"
+          content="About Charj - Meet the Founder | Credit Card Keep-Alive Service" />
+    <meta name="description"
+          content="Learn about Charj and its founder Abe Hanoka, a software engineer specializing in payment systems and calendar applications. Discover how Charj keeps your credit cards active." />
+    <meta name="keywords"
+          content="Charj founder, Abe Hanoka, credit card keep alive service, payment systems expert, dj-stripe maintainer, Stripe integration" />
+    <meta name="author" content="Abe Hanoka" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://charj.cc/about/" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://charj.cc/about/" />
+    <meta property="og:title"
+          content="About Charj - Meet the Founder | Credit Card Keep-Alive Service" />
+    <meta property="og:description"
+          content="Learn about Charj and its founder Abe Hanoka, a software engineer specializing in payment systems and calendar applications." />
+    <meta property="og:image" content="https://charj.cc/og-image.png" />
+    <meta property="og:site_name" content="Charj" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://charj.cc/about/" />
+    <meta property="twitter:title"
+          content="About Charj - Meet the Founder | Credit Card Keep-Alive Service" />
+    <meta property="twitter:description"
+          content="Learn about Charj and its founder Abe Hanoka, a software engineer specializing in payment systems." />
+    <meta property="twitter:image" content="https://charj.cc/twitter-image.png" />
+    <!-- Favicon -->
+    <link rel="icon"
+          type="image/x-icon"
+          href="{% static 'images/favicons/favicon.ico' %}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+    <!-- Bootstrap CSS via Django Compressor -->
+    {% load compress %}
+
+    {% compress css %}
+      <link rel="stylesheet"
+            type="text/x-scss"
+            href="{% static 'css/custom-bootstrap.scss' %}" />
+    {% endcompress %}
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Charj",
+        "url": "https://charj.cc",
+        "logo": "https://charj.cc/logo.png",
+        "description": "Credit card keep-alive service that prevents card closures due to inactivity with automated charges on your schedule.",
+        "founder": {
+          "@type": "Person",
+          "name": "Abe Hanoka",
+          "url": "https://habet.dev",
+          "sameAs": [
+            "https://github.com/abe-101",
+            "https://linkedin.com/in/abe101"
+          ],
+          "jobTitle": "Software Engineer",
+          "knowsAbout": ["Payment Systems", "Stripe Integration", "Calendar Applications", "Django", "Python"]
+        },
+        "sameAs": [
+          "https://github.com/abe-101/charj"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Abe Hanoka",
+        "url": "https://habet.dev",
+        "sameAs": [
+          "https://github.com/abe-101",
+          "https://linkedin.com/in/abe101"
+        ],
+        "jobTitle": "Software Engineer",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Kraken"
+        },
+        "knowsAbout": ["Payment Systems", "Stripe API", "Calendar Applications", "Django", "Python", "dj-stripe"],
+        "description": "Full-stack developer specializing in payment systems and calendar applications. Open source maintainer of dj-stripe."
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://charj.cc/"
+        }, {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "About",
+          "item": "https://charj.cc/about/"
+        }]
+      }
+    </script>
+  </head>
+  <body class="landing-page">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">Charj</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'features' %}">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'how-it-works' %}">How It Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pricing' %}">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'about' %}">About</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="container mt-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">About</li>
+      </ol>
+    </nav>
+    <!-- About Hero Section -->
+    <section class="hero-section" style="padding: 4rem 0;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 col-xl-8 mx-auto">
+            <div class="hero-content text-center">
+              <h1 class="hero-title">
+                About <span class="accent">Charj</span>
+              </h1>
+              <p class="hero-subtitle">Built by a payment systems expert to solve a real problem.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Mission Section -->
+    <section class="bg-light">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Our Mission</div>
+          <h2>Protecting Your Credit History</h2>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <p class="lead text-center">
+              Charj was created to solve a frustrating problem that affects millions of credit card holders:
+              <strong>unexpected account closures due to inactivity</strong>.
+            </p>
+            <p class="text-center">
+              Credit card companies routinely close accounts that show no activity for 12-24 months.
+              When this happens, your credit utilization ratio increases, your average account age decreases,
+              and your credit score can drop significantly. Charj prevents this by keeping your cards
+              active with small, automated charges on a schedule you control.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Founder Section -->
+    <section>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">The Founder</div>
+          <h2>Meet Abe Hanoka</h2>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="card p-4">
+              <div class="card-body">
+                <h3 class="h4 mb-3">Payment Systems & Calendar Expert</h3>
+                <p>
+                  Abe Hanoka is a seasoned full-stack developer with deep expertise in Django, Python,
+                  and payment systems. As an <strong>open source maintainer of dj-stripe</strong> since 2024,
+                  he has extensive experience integrating Stripe into Django applications.
+                </p>
+                <p>
+                  Abe specializes in two key areas: <strong>payment systems</strong> and <strong>calendar applications</strong>.
+                  This unique combination of skills made him perfectly positioned to create Charj, a service
+                  that combines scheduled automation with secure payment processing.
+                </p>
+                <h4 class="h5 mt-4 mb-3">Other Projects</h4>
+                <ul>
+                  <li>
+                    <strong>dj-stripe</strong> - Open source library that automatically syncs Stripe data to Django databases
+                    <a href="https://dj-stripe.dev"
+                       target="_blank"
+                       rel="noopener"
+                       class="text-decoration-none ms-1">
+                      <i class="bi bi-box-arrow-up-right small"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <strong>MergeCal</strong> - A service for merging multiple calendars into one simple feed
+                    <a href="https://mergecal.org"
+                       target="_blank"
+                       rel="noopener"
+                       class="text-decoration-none ms-1">
+                      <i class="bi bi-box-arrow-up-right small"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <strong>MyHebrewDates</strong> - A web application for tracking recurring Hebrew dates like birthdays and anniversaries
+                    <a href="https://myhebrewdates.com"
+                       target="_blank"
+                       rel="noopener"
+                       class="text-decoration-none ms-1">
+                      <i class="bi bi-box-arrow-up-right small"></i>
+                    </a>
+                  </li>
+                </ul>
+                <div class="mt-4">
+                  <a href="https://github.com/abe-101"
+                     class="btn btn-outline-primary me-2"
+                     target="_blank"
+                     rel="noopener">GitHub</a>
+                  <a href="https://linkedin.com/in/abe101"
+                     class="btn btn-outline-primary me-2"
+                     target="_blank"
+                     rel="noopener">LinkedIn</a>
+                  <a href="https://habet.dev"
+                     class="btn btn-outline-primary"
+                     target="_blank"
+                     rel="noopener">Website</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Why Trust Section -->
+    <section class="bg-light">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Why Trust Us</div>
+          <h2>Built on Proven Technology</h2>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <div class="feature-icon">🔒</div>
+              <h3>Stripe-Powered</h3>
+              <p>
+                All payments are processed through Stripe, the same payment infrastructure
+                used by Amazon, Google, and millions of businesses worldwide.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <div class="feature-icon">🛡️</div>
+              <h3>PCI Compliant</h3>
+              <p>
+                We never see or store your credit card numbers. All sensitive data is
+                handled by Stripe, which maintains PCI DSS Level 1 certification.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <div class="feature-icon">📖</div>
+              <h3>Open Source</h3>
+              <p>
+                Charj is built on open source principles. The code is transparent
+                and available for review, ensuring trust and accountability.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Protect Your Credit Cards?</h2>
+        <p>Join hundreds of users keeping their credit history intact</p>
+        <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started Now</a>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'features' %}">Features</a>
+          <a href="{% url 'how-it-works' %}">How It Works</a>
+          <a href="{% url 'pricing' %}">Pricing</a>
+          <a href="{% url 'about' %}">About</a>
+          <a href="{% url 'account_login' %}">Sign In</a>
+        </div>
+        <p>
+          &copy; <span id="current-year"></span> Charj. All rights reserved.
+        </p>
+      </div>
+    </footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
+            integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
