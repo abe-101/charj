@@ -6,8 +6,9 @@ This file provides guidance to agents when working with code in this repository.
 
 ## Project Overview
 A Django-based SaaS application that helps users keep their credit cards active by
-charging $1 annually per card. This prevents credit card accounts from being closed
-due to inactivity.
+charging small amounts on a user-defined schedule. Users choose their own amount
+and billing frequency. This prevents credit card accounts from being closed due to
+inactivity.
 
 ## Tech Stack
 - **Backend:** Django (cookiecutter-django template)
@@ -29,7 +30,7 @@ due to inactivity.
 4. User enters card details
 5. JavaScript calls `stripe.confirmCardSetup()` (handles 3D Secure authentication)
 6. Backend receives authenticated PaymentMethod ID
-7. Backend creates annual $1 subscription tied to that specific card
+7. Backend creates subscription with user-selected amount and frequency tied to that specific card
 8. User redirected to dashboard with new card listed
 
 ### Managing Existing Cards/Subscriptions
@@ -62,7 +63,7 @@ due to inactivity.
 - **Customer:** One per user
 - **PaymentMethod:** One per credit card
 - **Subscription:** One per card, annual billing cycle
-- **Product/Price:** Single $1/year product configured in Stripe dashboard
+- **Product/Price:** Dynamic pricing with user-selectable amount and billing frequency
 
 ## Benefits of This Approach
 - **Security:** PCI-compliant, Stripe handles sensitive card data
