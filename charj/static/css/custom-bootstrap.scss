@@ -605,6 +605,8 @@ $body-color: #3d5a80;  // Softer navy-gray for body text
   border-bottom: 1px solid rgba($charj-navy, 0.08);
   padding: 1rem 0;
   box-shadow: 0 2px 8px rgba($charj-navy, 0.04);
+  position: relative;
+  z-index: 1030;
 
   .navbar-brand {
     font-family: $font-family-display;
@@ -807,6 +809,11 @@ $body-color: #3d5a80;  // Softer navy-gray for body text
     .hero-section {
       min-height: auto;
       padding: 4rem 0;
+      overflow: hidden;
+
+      .hero-title {
+        font-size: 2.75rem;
+      }
     }
 
     section {
@@ -816,6 +823,29 @@ $body-color: #3d5a80;  // Softer navy-gray for body text
     .feature-card,
     .step-card {
       margin-bottom: 1.5rem;
+      padding: 1.5rem;
+
+      .step-number {
+        left: 1.5rem;
+      }
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+    }
+
+    // Pricing page mobile adjustments
+    .pricing-card {
+      padding: 2rem 1.5rem;
+
+      .price-tag .price {
+        font-size: 3.5rem;
+      }
+    }
+
+    // About page mobile adjustments
+    .hero-title {
+      font-size: 2.5rem;
     }
   }
 }
