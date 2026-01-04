@@ -100,12 +100,24 @@
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
-            </li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'cards:dashboard' %}">My Cards</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:detail' request.user.pk %}">My Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'account_logout' %}">Sign Out</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+              </li>
+            {% endif %}
           </ul>
         </div>
       </div>
@@ -131,8 +143,8 @@
       </div>
     </footer>
     {# JavaScript #}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
-            integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+            integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
     {% block extra_js %}
