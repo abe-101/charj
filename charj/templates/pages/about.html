@@ -1,0 +1,187 @@
+{% extends "pages/landing_base.html" %}
+
+{% block title %}
+  About Charj - Built by Abe Hanoka, Payments Engineer
+{% endblock title %}
+{% block meta_description %}
+  Charj is built by Abe Hanoka, a payments engineer and maintainer of dj-stripe. Over $1M processed through his payment systems.
+{% endblock meta_description %}
+{% block meta_keywords %}
+  Abe Hanoka, Charj founder, credit card keep alive service, dj-stripe maintainer, Stripe payment engineer
+{% endblock meta_keywords %}
+{% block canonical_url %}
+  https://charj.cc/about/
+{% endblock canonical_url %}
+{% block og_type %}
+  profile
+{% endblock og_type %}
+{% block og_url %}
+  https://charj.cc/about/
+{% endblock og_url %}
+{% block og_title %}
+  About Charj - Built by Abe Hanoka
+{% endblock og_title %}
+{% block og_description %}
+  Payments engineer. dj-stripe maintainer. $1M+ processed.
+{% endblock og_description %}
+{% block twitter_url %}
+  https://charj.cc/about/
+{% endblock twitter_url %}
+{% block twitter_title %}
+  About Charj - Built by Abe Hanoka
+{% endblock twitter_title %}
+{% block twitter_description %}
+  Payments engineer. dj-stripe maintainer.
+{% endblock twitter_description %}
+{% block nav_about_active %}
+  active
+{% endblock nav_about_active %}
+{% block json_ld %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Abe Hanoka",
+      "url": "https://habet.dev",
+      "sameAs": ["https://github.com/abe-101", "https://linkedin.com/in/abe101"],
+      "jobTitle": "Software Engineer",
+      "knowsAbout": ["Payment Systems", "Stripe", "Django", "Python"],
+      "description": "Payments engineer specializing in Stripe integrations. Maintainer of dj-stripe."
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://charj.cc/"
+      }, {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "About",
+        "item": "https://charj.cc/about/"
+      }]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Charj",
+      "url": "https://charj.cc",
+      "description": "Credit card keep-alive service that prevents account closures due to inactivity.",
+      "founder": {
+        "@type": "Person",
+        "name": "Abe Hanoka",
+        "url": "https://habet.dev"
+      }
+    }
+  </script>
+{% endblock json_ld %}
+{% block breadcrumb %}
+  <nav aria-label="breadcrumb" class="container mt-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">About</li>
+    </ol>
+  </nav>
+{% endblock breadcrumb %}
+{% block content %}
+  <section class="hero-section section-hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h1 class="hero-title">Hi, I'm Abe.</h1>
+          <p class="lead mb-0">I'm a payments engineer who deals with Stripe and other payment vendors daily.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <p>
+            I maintain <a href="https://dj-stripe.dev" target="_blank" rel="noopener"><strong>dj-stripe</strong></a>,
+            the most popular Django library for Stripe integration. If you've built
+            a Django app with Stripe subscriptions, there's a good chance you've used code I help maintain.
+          </p>
+          <h3 class="mt-5 mb-3">Payment systems I've built</h3>
+          <ul>
+            <li>
+              <a href="https://one8.io" target="_blank" rel="noopener"><strong>One8.io</strong></a> —
+              Parking lot payment system using Stripe Connect. Multi-rate pricing,
+              automated payouts, webhook handling. Over <strong>$1M in transactions</strong> processed.
+            </li>
+            <li>
+              <a href="https://paytheboot.com" target="_blank" rel="noopener"><strong>PayTheBoot.com</strong></a> —
+              Vehicle booting management with Authorize.net integration. Payment processing for parking violations.
+            </li>
+            <li>
+              <a href="https://mergecal.org" target="_blank" rel="noopener"><strong>MergeCal</strong></a> —
+              Calendar merging SaaS with Stripe subscriptions.
+            </li>
+          </ul>
+          <h3 class="mt-5 mb-3">Other projects</h3>
+          <ul>
+            <li>
+              <a href="https://myhebrewdates.com" target="_blank" rel="noopener"><strong>MyHebrewDates</strong></a> —
+              Hebrew calendar date tracking. 300 active users, 3000+ events synced to Google/Apple calendars.
+            </li>
+            <li>
+              <a href="https://dj-stripe.dev" target="_blank" rel="noopener"><strong>dj-stripe</strong></a> —
+              Open source maintainer. Rebuilt the documentation system.
+            </li>
+            <li>
+              <strong>Djangonaut Space</strong> — Contributed to Django core. Fixed session management bugs.
+            </li>
+          </ul>
+          <h3 class="mt-5 mb-3">Why I built Charj</h3>
+          <p>
+            I kept hearing from people who had credit cards closed due to inactivity.
+            It happened to friends. It happened in online communities I'm part of.
+            The fix is simple: use the card occasionally. But people forget.
+          </p>
+          <p>
+            Charj automates that. Add your cards, pick a schedule, and forget about it.
+            The cards stay active, your credit history stays intact.
+          </p>
+          <p>I already knew how to build payment systems. This was a straightforward application of that knowledge.</p>
+          <h3 class="mt-5 mb-3">Links</h3>
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <a href="https://github.com/abe-101"
+                 target="_blank"
+                 rel="noopener"
+                 class="btn btn-outline-primary">GitHub</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://linkedin.com/in/abe101"
+                 target="_blank"
+                 rel="noopener"
+                 class="btn btn-outline-primary">LinkedIn</a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://habet.dev"
+                 target="_blank"
+                 rel="noopener"
+                 class="btn btn-outline-primary">Website</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="cta-section">
+    <div class="container">
+      <h2>Questions?</h2>
+      <p>Reach out on LinkedIn or check the code on GitHub.</p>
+      <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started</a>
+    </div>
+  </section>
+{% endblock content %}

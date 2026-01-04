@@ -1,439 +1,325 @@
-{% load static %}
+{% extends "pages/landing_base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Primary Meta Tags -->
-    <title>Charj - Keep Your Credit Cards Active | Flexible Automated Charges</title>
-    <meta name="title"
-          content="Charj - Keep Your Credit Cards Active | Flexible Automated Charges" />
-    <meta name="description"
-          content="Prevent credit card closures due to inactivity. Charj automatically charges your cards on your schedule to keep them active and protect your credit score. Choose your amount and frequency. Secure and Stripe-powered." />
-    <meta name="keywords"
-          content="credit card keep alive, prevent card closure, credit card inactivity, credit score protection, automated card charges, stripe payment service" />
-    <meta name="author" content="Charj" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://charj.com/" />
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://charj.com/" />
-    <meta property="og:title"
-          content="Charj - Keep Your Credit Cards Active | Flexible Automated Charges" />
-    <meta property="og:description"
-          content="Prevent credit card closures due to inactivity. Charj charges your cards on your schedule to keep them active and protect your credit score. Choose your amount and frequency." />
-    <meta property="og:image" content="https://charj.com/og-image.png" />
-    <meta property="og:site_name" content="Charj" />
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://charj.com/" />
-    <meta property="twitter:title"
-          content="Charj - Keep Your Credit Cards Active | Flexible Automated Charges" />
-    <meta property="twitter:description"
-          content="Prevent credit card closures due to inactivity. Charj charges your cards on your schedule to keep them active. Choose your amount and frequency." />
-    <meta property="twitter:image"
-          content="https://charj.com/twitter-image.png" />
-    <!-- Favicon -->
-    <link rel="icon"
-          type="image/x-icon"
-          href="{% static 'images/favicons/favicon.ico' %}" />
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
-          rel="stylesheet" />
-    <!-- Bootstrap CSS via Django Compressor -->
-    {% load compress %}
-
-    {% compress css %}
-      <link rel="stylesheet"
-            type="text/x-scss"
-            href="{% static 'css/custom-bootstrap.scss' %}" />
-    {% endcompress %}
-    <!-- JSON-LD Structured Data for SEO and LLMs -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Charj",
-        "applicationCategory": "FinanceApplication",
-        "description": "Credit card keep-alive service that prevents card closures due to inactivity with automated charges on your schedule. Choose your own amount and billing frequency.",
-        "offers": {
-          "@type": "Offer",
-          "priceSpecification": {
-            "@type": "UnitPriceSpecification",
-            "priceCurrency": "USD",
-            "referenceQuantity": {
-              "@type": "QuantitativeValue",
-              "value": "1",
-              "unitText": "credit card"
-            }
-          }
-        },
-        "featureList": [
-          "Flexible pricing - choose your amount and frequency",
-          "Automated charges to keep cards active",
-          "Secure Stripe-powered payment processing",
-          "Easy card management dashboard",
-          "PCI compliant and secure",
-          "Cancel anytime"
-        ],
-        "screenshot": "https://charj.com/screenshot.png",
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.8",
-          "ratingCount": "127"
+{% block title %}
+  Keep Credit Cards Active | Prevent Closure Due to Inactivity | Charj
+{% endblock title %}
+{% block meta_description %}
+  Stop credit cards from being closed due to inactivity. Charj automatically charges your cards on a schedule you choose, keeping them active and protecting your credit score. From $0.50/year.
+{% endblock meta_description %}
+{% block meta_keywords %}
+  keep credit cards active, prevent credit card closure, credit card inactivity, stop card from closing, how to keep old credit cards open, automated card charges, credit card keep alive service
+{% endblock meta_keywords %}
+{% block canonical_url %}
+  https://charj.cc/
+{% endblock canonical_url %}
+{% block og_title %}
+  Keep Credit Cards Active | Prevent Closure Due to Inactivity
+{% endblock og_title %}
+{% block og_description %}
+  Stop credit cards from being closed due to inactivity. Automated charges keep your cards active. From $0.50/year.
+{% endblock og_description %}
+{% block twitter_title %}
+  Keep Credit Cards Active | Prevent Closure
+{% endblock twitter_title %}
+{% block twitter_description %}
+  Stop credit cards from being closed due to inactivity. Automated charges from $0.50/year.
+{% endblock twitter_description %}
+{% block json_ld %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Charj",
+      "applicationCategory": "FinanceApplication",
+      "description": "Credit card keep-alive service that prevents card closures due to inactivity with automated charges on your schedule.",
+      "author": {
+        "@type": "Person",
+        "name": "Abe Hanoka",
+        "url": "https://habet.dev",
+        "jobTitle": "Software Engineer"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0.50",
+        "priceCurrency": "USD",
+        "priceValidUntil": "2026-12-31"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Why do credit card companies close inactive accounts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Credit card issuers close inactive accounts to reduce risk and costs. Accounts with no activity for 12-24 months are at risk. When closed, your credit utilization increases and average account age decreases, potentially lowering your credit score."
         }
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [{
-          "@type": "Question",
-          "name": "Why do credit card companies close inactive accounts?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Credit card issuers close inactive accounts to reduce risk and administrative costs. Typically, accounts with no activity for 12-24 months are at risk of closure, which can negatively impact your credit score by reducing your available credit and average account age."
-          }
-        }, {
-          "@type": "Question",
-          "name": "How does Charj keep my credit cards active?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Charj automatically charges a small amount to each credit card you add on a schedule you choose. You pick the amount and frequency (daily, weekly, monthly, or yearly). This regular activity keeps the card active in the issuer's system, preventing closure due to inactivity while maintaining your credit history and score."
-          }
-        }, {
-          "@type": "Question",
-          "name": "Is Charj secure and PCI compliant?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, Charj is powered by Stripe, a industry-leading payment processor. We never store your credit card information. All card data is securely handled by Stripe, which is PCI DSS Level 1 certified - the highest level of security certification in the payments industry."
-          }
-        }, {
-          "@type": "Question",
-          "name": "Can I cancel my subscription at any time?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, you can cancel any or all of your card subscriptions at any time through your dashboard. There are no contracts, cancellation fees, or hidden charges. You only pay for the cards you want to keep active at the rate you choose."
-          }
-        }, {
-          "@type": "Question",
-          "name": "How much does Charj cost?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "You choose your own pricing! Select any amount starting from $0.50 and pick your billing frequency (daily, weekly, monthly, or yearly). There are no setup fees or hidden charges. You only pay for the cards you add to the service at the rate you select."
-          }
-        }]
-      }
-    </script>
-  </head>
-  <body class="landing-page">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-md navbar-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">Charj</a>
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-10 col-xl-8 mx-auto">
-            <div class="hero-content text-center">
-              <h1 class="hero-title">
-                Keep Your Credit Cards
-                <span class="accent">Active</span>
-              </h1>
-              <p class="hero-subtitle">Prevent closures due to inactivity.</p>
-              <p class="hero-subtitle">Protect your credit score.</p>
-              <p class="hero-subtitle">Choose your amount and schedule.</p>
-              <div class="cta-buttons">
-                <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Get Started</a>
-                <a href="#how-it-works" class="btn btn-outline-secondary btn-lg">See How It Works</a>
-              </div>
-              <div class="trust-badge">
-                <span class="badge-icon">🔒</span>
-                <span>Secured by Stripe • PCI Compliant</span>
-              </div>
+      }, {
+        "@type": "Question",
+        "name": "How does Charj work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Add your cards through Stripe's secure form. Choose an amount ($0.50 minimum) and frequency (daily, weekly, monthly, or yearly). Charj charges your cards on schedule, creating activity that prevents closure."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my card data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Card data is handled entirely by Stripe. Charj never sees or stores card numbers. Stripe is PCI DSS Level 1 certified."
+        }
+      }]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Keep Your Credit Cards Active with Charj",
+      "description": "Prevent credit card closures due to inactivity with automated small charges.",
+      "totalTime": "PT5M",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "USD",
+        "value": "0.50"
+      },
+      "step": [{
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Add your credit cards",
+        "text": "Enter card details through Stripe's secure form. Charj never sees or stores your card numbers."
+      }, {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Set your schedule",
+        "text": "Pick your amount ($0.50 minimum) and frequency: daily, weekly, monthly, or yearly."
+      }, {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Done - cards stay active",
+        "text": "Charges run automatically on your schedule. Your cards stay active and your credit history is protected. Cancel anytime."
+      }]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Charj",
+      "url": "https://charj.cc",
+      "description": "Credit card keep-alive service that prevents account closures due to inactivity.",
+      "founder": {
+        "@type": "Person",
+        "name": "Abe Hanoka",
+        "url": "https://habet.dev",
+        "sameAs": ["https://github.com/abe-101", "https://linkedin.com/in/abe101"]
+      },
+      "sameAs": ["https://github.com/abe-101/charj"]
+    }
+  </script>
+{% endblock json_ld %}
+{% block content %}
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 col-xl-8 mx-auto">
+          <div class="hero-content text-center">
+            <h1 class="hero-title">
+              Keep Your Credit Cards <span class="accent">Active</span>
+            </h1>
+            <p class="hero-subtitle">Automated charges prevent closures due to inactivity.</p>
+            <p class="hero-subtitle">You pick the amount and schedule. Stripe handles the rest.</p>
+            <div class="cta-buttons">
+              <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Get Started</a>
+              <a href="#how-it-works" class="btn btn-outline-secondary btn-lg">How It Works</a>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Problem Section -->
-    <section class="bg-light">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">The Problem</div>
-          <h2>The Inactivity Challenge</h2>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-8 text-center">
-            <div class="stat-card">
-              <div class="stat-number">12-24</div>
-              <div class="stat-label">Months Until Closure</div>
-            </div>
-            <p class="lead mt-4">
-              Credit card companies close inactive accounts after just 12-24 months of no activity. When this happens, you lose valuable credit history, your credit utilization ratio increases, and your credit score drops.
+            <p class="mt-4 text-muted">
+              Built by <a href="{% url 'about' %}" class="text-decoration-none">Abe Hanoka</a> —
+              payments engineer and dj-stripe maintainer.
             </p>
           </div>
         </div>
       </div>
-    </section>
-    <!-- How It Works -->
-    <section id="how-it-works">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">How It Works</div>
-          <h2>Simple, Automated, Secure</h2>
-          <p class="section-description">Set it once and forget about it. We handle everything automatically.</p>
-        </div>
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="step-card">
-              <div class="step-number">1</div>
-              <h3>Add Your Cards</h3>
-              <p>
-                Securely connect the credit cards you want to keep active. All card data is handled by Stripe — we never see or store your card numbers.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="step-card">
-              <div class="step-number">2</div>
-              <h3>We Charge on Your Schedule</h3>
-              <p>
-                Choose your amount and frequency — daily, weekly, monthly, or yearly. Each small charge keeps your card active in the issuer's system.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="step-card">
-              <div class="step-number">3</div>
-              <h3>Your Cards Stay Active</h3>
-              <p>
-                No more surprise closures. Your credit history remains intact, and your credit score stays protected. Manage everything from your dashboard.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Features -->
-    <section class="bg-light">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">Why Charj</div>
-          <h2>Built for Security and Simplicity</h2>
-        </div>
-        <div class="row g-4">
-          <div class="col-md-6 col-lg-3">
-            <div class="feature-card">
-              <div class="feature-icon">🔒</div>
-              <h3>Bank-Level Security</h3>
-              <p>
-                Powered by Stripe. Your card data is encrypted and PCI DSS Level 1 certified — the highest security standard in payments.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="feature-card">
-              <div class="feature-icon">⚙️</div>
-              <h3>Fully Automated</h3>
-              <p>
-                Set it and forget it. Once you add a card, we handle everything automatically. No manual payments, no reminders needed.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="feature-card">
-              <div class="feature-icon">💰</div>
-              <h3>Flexible Pricing</h3>
-              <p>You choose your amount and frequency. No hidden fees, no surprises. Cancel any card subscription anytime.</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="feature-card">
-              <div class="feature-icon">📊</div>
-              <h3>Easy Management</h3>
-              <p>
-                Simple dashboard to view all your cards, check payment status, and manage subscriptions. Everything in one place.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Pricing -->
-    <section id="pricing">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">Pricing</div>
-          <h2>Simple, Honest Pricing</h2>
-          <p class="section-description">No contracts. No hidden fees. Cancel anytime.</p>
-        </div>
-        <div class="pricing-card">
-          <div class="price-tag">
-            <div class="price">
-              <span class="currency">You</span> Choose
-            </div>
-            <div class="price-period">your amount and frequency</div>
-            <p class="price-description">Starting at $0.50 — daily, weekly, monthly, or yearly</p>
-          </div>
-          <ul class="pricing-features">
-            <li>Flexible amount and schedule</li>
-            <li>Unlimited card management</li>
-            <li>Secure Stripe processing</li>
-            <li>Email notifications</li>
-            <li>24/7 dashboard access</li>
-            <li>Cancel anytime — no future charges</li>
+    </div>
+  </section>
+  <!-- The Problem -->
+  <section class="bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="mb-4">The Problem</h2>
+          <p class="lead">Credit card issuers close accounts with no activity for 12-24 months. When they do:</p>
+          <ul class="lead">
+            <li>Your credit utilization ratio goes up</li>
+            <li>Your average account age goes down</li>
+            <li>Your credit score takes a hit</li>
           </ul>
-          <a href="{% url 'account_signup' %}"
-             class="btn btn-primary btn-lg w-100">Start Protecting Your Cards</a>
+          <p>If you have cards you rarely use but want to keep open, you need activity. Charj automates that.</p>
         </div>
       </div>
-    </section>
-    <!-- FAQ -->
-    <section class="bg-light" id="faq">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">FAQ</div>
-          <h2>Frequently Asked Questions</h2>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-9">
-            <div class="faq-item">
-              <details>
-                <summary>Why do credit card companies close inactive accounts?</summary>
-                <div class="faq-answer">
-                  Credit card issuers close inactive accounts to reduce risk and administrative costs. Typically, accounts with no activity for 12-24 months are at risk of closure, which can negatively impact your credit score by reducing your available credit and average account age.
-                </div>
-              </details>
+    </div>
+  </section>
+  <!-- How It Works -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="mb-4">How It Works</h2>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Add cards</h3>
+                <p>Enter card details through Stripe's form. We never see or store card numbers.</p>
+              </div>
             </div>
-            <div class="faq-item">
-              <details>
-                <summary>How does Charj keep my credit cards active?</summary>
-                <div class="faq-answer">
-                  Charj automatically charges a small amount to each credit card you add on a schedule you choose. You pick the amount and frequency (daily, weekly, monthly, or yearly). This regular activity keeps the card active in the issuer's system, preventing closure due to inactivity while maintaining your credit history and score.
-                </div>
-              </details>
+            <div class="col-md-4">
+              <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Set schedule</h3>
+                <p>Pick your amount ($0.50+) and frequency: daily, weekly, monthly, or yearly.</p>
+              </div>
             </div>
-            <div class="faq-item">
-              <details>
-                <summary>Is Charj secure and PCI compliant?</summary>
-                <div class="faq-answer">
-                  Yes, Charj is powered by Stripe, an industry-leading payment processor. We never store your credit card information. All card data is securely handled by Stripe, which is PCI DSS Level 1 certified - the highest level of security certification in the payments industry.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>Can I cancel my subscription at any time?</summary>
-                <div class="faq-answer">
-                  Yes, you can cancel any or all of your card subscriptions at any time through your dashboard. There are no contracts, cancellation fees, or hidden charges. You only pay for the cards you want to keep active at the rate you choose.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>How much does Charj cost?</summary>
-                <div class="faq-answer">
-                  You choose your own pricing! Select any amount starting from $0.50 and pick your billing frequency (daily, weekly, monthly, or yearly). There are no setup fees or hidden charges. You only pay for the cards you add to the service at the rate you select.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>What happens if a payment fails?</summary>
-                <div class="faq-answer">
-                  If an annual charge fails (e.g., due to an expired card or insufficient funds), we'll notify you immediately via email. You can update your payment method through your dashboard. We'll retry the payment automatically, and your card will remain in our system.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>How many credit cards can I add?</summary>
-                <div class="faq-answer">
-                  There's no limit! You can add as many credit cards as you want to keep active. Each card gets its own subscription with the amount and frequency you choose.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>Will these small charges affect my credit score?</summary>
-                <div class="faq-answer">
-                  No, small recurring charges will not negatively impact your credit score. In fact, they help by keeping your cards active and maintaining your credit history. The positive impact of preserving account age and available credit far outweighs any minimal effect from the charges.
-                </div>
-              </details>
+            <div class="col-md-4">
+              <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Done</h3>
+                <p>Charges run automatically. Your cards stay active. Cancel anytime.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="container">
-        <h2>Ready to Protect Your Credit Cards?</h2>
-        <p>Join hundreds of users keeping their credit history intact</p>
-        <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started Now</a>
-      </div>
-    </section>
-    <!-- Footer -->
-    <footer>
-      <div class="container">
-        <div class="footer-links">
-          <a href="{% url 'account_login' %}">Sign In</a>
+    </div>
+  </section>
+  <!-- Why Trust This -->
+  <section class="bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="mb-4">Why Trust This</h2>
+          <div class="card p-4">
+            <p class="lead mb-3">
+              I'm <a href="{% url 'about' %}">Abe Hanoka</a>. I'm a payments engineer
+              and maintainer of <strong>dj-stripe</strong>, the most popular
+              Django library for Stripe integration.
+            </p>
+            <p class="mb-3">
+              I've built payment systems that have processed over <strong>$1M in transactions</strong>:
+            </p>
+            <ul class="mb-3">
+              <li>
+                <a href="https://one8.io" target="_blank" rel="noopener">One8.io</a> — parking payments with Stripe Connect
+              </li>
+              <li>
+                <a href="https://mergecal.org" target="_blank" rel="noopener">MergeCal</a> — paid SaaS
+              </li>
+              <li>
+                <a href="https://dj-stripe.dev" target="_blank" rel="noopener">dj-stripe</a> — open source Stripe integration for Django
+              </li>
+            </ul>
+            <p class="mb-0">
+              I built Charj because I heard from people who lost credit cards to inactivity. It's a simple problem with a simple solution.
+            </p>
+          </div>
         </div>
-        <p>
-          © <span id="current-year"></span> Charj. All rights reserved.
-        </p>
       </div>
-    </footer>
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
-            integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"></script>
-    <!-- Smooth Scroll & Dynamic Year -->
-    <script>
-      // Set current year
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-
-      // Smooth scroll for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }
-        });
+    </div>
+  </section>
+  <!-- Pricing Preview -->
+  <section id="pricing">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="mb-4">Pricing</h2>
+          <div class="pricing-card">
+            <div class="price-tag">
+              <div class="price">You choose</div>
+              <div class="price-period">$0.50 minimum per card</div>
+            </div>
+            <ul class="pricing-features">
+              <li>Pick any amount starting at $0.50</li>
+              <li>Pick any frequency: daily, weekly, monthly, yearly</li>
+              <li>Each card has its own subscription</li>
+              <li>Cancel anytime, no fees</li>
+            </ul>
+            <p class="text-muted mb-3">Most users: $1/year per card. That's it.</p>
+            <a href="{% url 'pricing' %}" class="btn btn-outline-primary">See pricing details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FAQ -->
+  <section class="bg-light" id="faq">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="mb-4">FAQ</h2>
+          <div class="faq-item">
+            <details>
+              <summary>Is my card data secure?</summary>
+              <div class="faq-answer">
+                Card data is handled entirely by Stripe. Charj never sees or stores card numbers. Stripe is PCI DSS Level 1 certified.
+              </div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>What's the minimum charge?</summary>
+              <div class="faq-answer">$0.50. That's the smallest amount Stripe can reliably process.</div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>Can I cancel anytime?</summary>
+              <div class="faq-answer">Yes. Cancel through your dashboard or Stripe's portal. No fees, no questions.</div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>How many cards can I add?</summary>
+              <div class="faq-answer">No limit. Each card gets its own subscription.</div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>Will small charges hurt my credit score?</summary>
+              <div class="faq-answer">
+                No. Small recurring charges don't negatively impact your score. Keeping accounts open and active is what matters.
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Keep your cards active</h2>
+      <p>Simple problem. Simple solution.</p>
+      <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started</a>
+    </div>
+  </section>
+{% endblock content %}
+{% block extra_js %}
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
       });
-    </script>
-  </body>
-</html>
+    });
+  </script>
+{% endblock extra_js %}
