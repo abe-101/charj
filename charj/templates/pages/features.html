@@ -148,7 +148,7 @@
       </ol>
     </nav>
     <!-- Features Hero Section -->
-    <section class="hero-section" style="padding: 4rem 0;">
+    <section class="hero-section section-hero">
       <div class="container">
         <div class="row">
           <div class="col-lg-10 col-xl-8 mx-auto">
@@ -191,7 +191,7 @@
           </div>
           <div class="col-lg-6">
             <div class="feature-card text-center p-5">
-              <div class="feature-icon" style="font-size: 4rem;">🔒</div>
+              <div class="feature-icon icon-xxl">🔒</div>
               <h3 class="mt-3">Secured by Stripe</h3>
               <p class="mb-0">PCI DSS Level 1 Compliant</p>
             </div>
@@ -227,7 +227,7 @@
           </div>
           <div class="col-lg-6 order-lg-1">
             <div class="feature-card text-center p-5">
-              <div class="feature-icon" style="font-size: 4rem;">⚙️</div>
+              <div class="feature-icon icon-xxl">⚙️</div>
               <h3 class="mt-3">Set It & Forget It</h3>
               <p class="mb-0">100% Automated Operation</p>
             </div>
@@ -263,7 +263,7 @@
           </div>
           <div class="col-lg-6">
             <div class="feature-card text-center p-5">
-              <div class="feature-icon" style="font-size: 4rem;">💰</div>
+              <div class="feature-icon icon-xxl">💰</div>
               <h3 class="mt-3">You Choose Your Price</h3>
               <p class="mb-0">Starting at just $0.50</p>
             </div>
@@ -299,7 +299,7 @@
           </div>
           <div class="col-lg-6 order-lg-1">
             <div class="feature-card text-center p-5">
-              <div class="feature-icon" style="font-size: 4rem;">📊</div>
+              <div class="feature-icon icon-xxl">📊</div>
               <h3 class="mt-3">Simple Dashboard</h3>
               <p class="mb-0">Everything at a Glance</p>
             </div>
@@ -379,9 +379,7 @@
           <a href="{% url 'about' %}">About</a>
           <a href="{% url 'account_login' %}">Sign In</a>
         </div>
-        <p>
-          &copy; <span id="current-year"></span> Charj. All rights reserved.
-        </p>
+        <p>{% now "Y" %} Charj. All rights reserved.</p>
       </div>
     </footer>
     <!-- Bootstrap JS -->
@@ -389,8 +387,5 @@
             integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
-    <script>
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
   </body>
 </html>

@@ -162,7 +162,7 @@
       </ol>
     </nav>
     <!-- About Hero Section -->
-    <section class="hero-section" style="padding: 4rem 0;">
+    <section class="hero-section section-hero">
       <div class="container">
         <div class="row">
           <div class="col-lg-10 col-xl-8 mx-auto">
@@ -331,9 +331,7 @@
           <a href="{% url 'about' %}">About</a>
           <a href="{% url 'account_login' %}">Sign In</a>
         </div>
-        <p>
-          &copy; <span id="current-year"></span> Charj. All rights reserved.
-        </p>
+        <p>{% now "Y" %} Charj. All rights reserved.</p>
       </div>
     </footer>
     <!-- Bootstrap JS -->
@@ -341,8 +339,5 @@
             integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
-    <script>
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
   </body>
 </html>

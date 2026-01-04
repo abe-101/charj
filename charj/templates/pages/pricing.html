@@ -172,7 +172,7 @@
       </ol>
     </nav>
     <!-- Hero Section -->
-    <section class="hero-section" style="padding: 4rem 0;">
+    <section class="hero-section section-hero">
       <div class="container">
         <div class="row">
           <div class="col-lg-10 col-xl-8 mx-auto">
@@ -222,7 +222,7 @@
                   </div>
                 </div>
                 <div class="col-6 col-md-3">
-                  <div class="card p-3 border-primary" style="border-width: 2px;">
+                  <div class="card p-3 border-primary border-2">
                     <div class="h4 mb-0">$1</div>
                     <small class="text-muted">per year</small>
                     <span class="badge bg-primary mt-2">Popular</span>
@@ -257,7 +257,7 @@
         <div class="row g-4">
           <div class="col-md-4">
             <div class="feature-card text-center">
-              <div class="feature-icon" style="font-size: 2.5rem;">🏆</div>
+              <div class="feature-icon feature-icon-lg">🏆</div>
               <h3>Most Popular</h3>
               <div class="h2 my-3">$1/year</div>
               <p>
@@ -269,7 +269,7 @@
           </div>
           <div class="col-md-4">
             <div class="feature-card text-center">
-              <div class="feature-icon" style="font-size: 2.5rem;">📅</div>
+              <div class="feature-icon feature-icon-lg">📅</div>
               <h3>Monthly Peace of Mind</h3>
               <div class="h2 my-3">$1/month</div>
               <p>
@@ -280,7 +280,7 @@
           </div>
           <div class="col-md-4">
             <div class="feature-card text-center">
-              <div class="feature-icon" style="font-size: 2.5rem;">💪</div>
+              <div class="feature-icon feature-icon-lg">💪</div>
               <h3>Maximum Activity</h3>
               <div class="h2 my-3">$5/month</div>
               <p>
@@ -456,9 +456,7 @@
           <a href="{% url 'about' %}">About</a>
           <a href="{% url 'account_login' %}">Sign In</a>
         </div>
-        <p>
-          &copy; <span id="current-year"></span> Charj. All rights reserved.
-        </p>
+        <p>{% now "Y" %} Charj. All rights reserved.</p>
       </div>
     </footer>
     <!-- Bootstrap JS -->
@@ -466,8 +464,5 @@
             integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
-    <script>
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
   </body>
 </html>

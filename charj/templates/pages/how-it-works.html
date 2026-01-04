@@ -157,7 +157,7 @@
       </ol>
     </nav>
     <!-- Hero Section -->
-    <section class="hero-section" style="padding: 4rem 0;">
+    <section class="hero-section section-hero">
       <div class="container">
         <div class="row">
           <div class="col-lg-10 col-xl-8 mx-auto">
@@ -237,7 +237,7 @@
           </div>
           <div class="col-lg-6">
             <div class="feature-card text-center p-5">
-              <div class="feature-icon" style="font-size: 4rem;">📧</div>
+              <div class="feature-icon icon-xxl">📧</div>
               <h4 class="mt-3">Just Your Email</h4>
               <p class="mb-0">Quick and easy signup</p>
             </div>
@@ -260,7 +260,7 @@
           </div>
           <div class="col-lg-6 order-lg-1">
             <div class="feature-card text-center p-5">
-              <div class="feature-icon" style="font-size: 4rem;">💳</div>
+              <div class="feature-icon icon-xxl">💳</div>
               <h4 class="mt-3">Secure Card Entry</h4>
               <p class="mb-0">Powered by Stripe</p>
             </div>
@@ -294,7 +294,7 @@
           </div>
           <div class="col-lg-6">
             <div class="feature-card text-center p-5">
-              <div class="feature-icon" style="font-size: 4rem;">📅</div>
+              <div class="feature-icon icon-xxl">📅</div>
               <h4 class="mt-3">Flexible Scheduling</h4>
               <p class="mb-0">Daily, weekly, monthly, or yearly</p>
             </div>
@@ -303,12 +303,10 @@
         <!-- Result -->
         <div class="row justify-content-center">
           <div class="col-lg-8">
-            <div class="step-card text-center p-5"
-                 style="background: linear-gradient(135deg, #08244d 0%, #1a4a8a 100%);
-                        color: white">
-              <div style="font-size: 4rem;">✅</div>
-              <h3 class="mt-3" style="color: white;">That's It!</h3>
-              <p class="lead mb-0" style="opacity: 0.9;">
+            <div class="step-card text-center p-5 bg-gradient-navy-accent">
+              <div class="icon-xxl">✅</div>
+              <h3 class="mt-3 text-white">That's It!</h3>
+              <p class="lead mb-0 opacity-90">
                 Your cards are now protected. Charj will automatically charge each card on your chosen schedule,
                 keeping them active and your credit score safe. Monitor everything from your dashboard.
               </p>
@@ -416,9 +414,7 @@
           <a href="{% url 'about' %}">About</a>
           <a href="{% url 'account_login' %}">Sign In</a>
         </div>
-        <p>
-          &copy; <span id="current-year"></span> Charj. All rights reserved.
-        </p>
+        <p>{% now "Y" %} Charj. All rights reserved.</p>
       </div>
     </footer>
     <!-- Bootstrap JS -->
@@ -426,8 +422,5 @@
             integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
-    <script>
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
   </body>
 </html>

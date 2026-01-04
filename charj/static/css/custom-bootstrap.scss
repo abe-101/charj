@@ -634,6 +634,10 @@ $body-color: #3d5a80;  // Softer navy-gray for body text
     }
   }
 }
+// Small text class
+.small {
+  font-size: 0.875rem; // 14px
+}
 
 // ============================================================================
 // DASHBOARD/APP COMPONENT STYLES
@@ -776,6 +780,23 @@ $body-color: #3d5a80;  // Softer navy-gray for body text
   max-width: 400px;
 }
 
+.section-hero {
+  padding: 4rem 0;
+}
+
+.icon-xxl {
+  font-size: 4rem;
+}
+
+.bg-gradient-navy-accent {
+  background: linear-gradient(135deg, $charj-navy 0%, #1a4a8a 100%);
+  color: white;
+}
+
+.opacity-90 {
+  opacity: 0.9;
+}
+
 // ============================================================================
 // ERROR PAGE STYLES
 // ============================================================================
@@ -801,8 +822,15 @@ $body-color: #3d5a80;  // Softer navy-gray for body text
   color: $charj-navy-medium;
 }
 
-// Responsive Typography
-@media (max-width: 768px) {
+// Specific overrides for pricing card highlight
+.card.border-primary.border-2 {
+  border-width: 2px !important;
+}
+
+// Large feature icons
+.feature-icon-lg {
+  font-size: 2.5rem;
+}
   .landing-page {
     .hero-section {
       min-height: auto;
