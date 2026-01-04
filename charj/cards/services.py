@@ -189,7 +189,7 @@ def get_user_cards(user) -> list[CardDisplay]:
                                 "interval_count",
                                 1,
                             )
-                except Exception:  # noqa: BLE001 - Continue gracefully if price data missing
+                except (AttributeError, IndexError, TypeError):
                     logger.warning(
                         "Failed to extract price details from subscription",
                         exc_info=True,

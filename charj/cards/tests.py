@@ -6,6 +6,8 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from djstripe.models import Customer
 from djstripe.models import PaymentMethod
+from djstripe.models import Price
+from djstripe.models import Product
 
 from charj.cards.pricing_service import InvalidPricingParametersError
 from charj.cards.pricing_service import PricingError
@@ -402,8 +404,9 @@ class TestDashboardViewWithCards:
 class TestPricingServiceValidation:
     """Tests for pricing service validation functions."""
 
-    def test_validate_pricing_parameters_valid(self):
+    def test_validate_pricing_parameters_valid(self, settings):
         """Valid parameters should not raise exceptions."""
+        settings.STRIPE_MIN_AMOUNT_CENTS = 50
         # No exception means validation passed
         validate_pricing_parameters(100, "year", 1)
         validate_pricing_parameters(50, "month", 1)  # Minimum amount
@@ -770,3 +773,164 @@ class TestCreateSubscriptionViewWithCustomPricing:
             call for call in mock_stripe_api.calls if "detach" in call.request.url
         ]
         assert len(detach_calls) == 1
+
+    def test_rejects_non_integer_amount(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should reject subscription with non-integer amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": "not_a_number",
+                    "interval": "year",
+                    "interval_count": 1,
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "must be integers" in data["error"]
+
+    def test_rejects_non_integer_interval_count(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should reject subscription with non-integer interval_count."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": 100,
+                    "interval": "year",
+                    "interval_count": "not_a_number",
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "must be integers" in data["error"]
+
+    def test_rejects_invalid_json(
+        self,
+        user: User,
+        rf: RequestFactory,
+    ):
+        """Should reject request with invalid JSON body."""
+        request = rf.post(
+            "/fake-url/",
+            data="not valid json",
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "Invalid JSON" in data["error"]
+
+    def test_handles_all_interval_types(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should accept all valid interval types."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        for interval in ["day", "week", "month", "year"]:
+            request = rf.post(
+                "/fake-url/",
+                data=json.dumps(
+                    {
+                        "payment_method_id": "pm_test_123",
+                        "amount_cents": 100,
+                        "interval": interval,
+                        "interval_count": 1,
+                    },
+                ),
+                content_type="application/json",
+            )
+            request.user = user
+            response = create_subscription_view(request)
+            assert response.status_code == HTTPStatus.OK, f"Failed: {interval}"
+
+
+class TestPricingServiceTieredLookup:
+    """Tests for the tiered price lookup strategy."""
+
+    def test_finds_price_in_local_cache(self, settings, db):
+        """Should return cached price from local database (Tier 1)."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+
+        # Create product first
+        product = Product.objects.create(
+            id="prod_test_123",
+            livemode=False,
+            name="Test Product",
+        )
+
+        # Create a cached price with matching lookup_key
+        Price.objects.create(
+            id="price_cached_123",
+            lookup_key="year_1_100",
+            active=True,
+            livemode=False,
+            currency="usd",
+            product=product,
+            stripe_data={
+                "id": "price_cached_123",
+                "unit_amount": 100,
+                "currency": "usd",
+                "recurring": {
+                    "interval": "year",
+                    "interval_count": 1,
+                },
+            },
+        )
+
+        price_id = get_or_create_price(100, "year", 1)
+        assert price_id == "price_cached_123"
+
+    def test_boundary_min_amount(self, settings, db):
+        """Should accept exact minimum amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MIN_AMOUNT_CENTS = 100
+        # Should not raise
+        price_id = get_or_create_price(100, "year", 1)
+        assert price_id is not None
+
+    def test_boundary_max_amount(self, settings, db):
+        """Should accept exact maximum amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MAX_AMOUNT_CENTS = 100000
+        # Should not raise
+        price_id = get_or_create_price(100000, "year", 1)
+        assert price_id is not None
+
+    def test_boundary_max_interval_count(self, settings, db):
+        """Should accept exact maximum interval count."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MAX_INTERVAL_COUNT = 36
+        # Should not raise
+        price_id = get_or_create_price(100, "year", 36)
+        assert price_id is not None
