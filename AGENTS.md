@@ -142,6 +142,8 @@ pre-commit install          # Install hooks
 pre-commit run --all-files  # Run manually
 ```
 
+**IMPORTANT:** Never use `--no-verify` to bypass pre-commit hooks. If hooks fail, fix the issues (e.g., HTML entities in templates, inline styles). CI will fail if hooks are bypassed.
+
 ## Architecture
 
 ### Settings Configuration
