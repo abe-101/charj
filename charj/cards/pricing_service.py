@@ -114,28 +114,21 @@ def get_or_create_price(
     lookup_key = generate_lookup_key(amount_cents, interval, interval_count)
 
     # Tier 1: Check local djstripe cache
-    try:
-        local_price = Price.objects.filter(
-            lookup_key=lookup_key,
-            active=True,
-        ).first()
+    local_price = Price.objects.filter(
+        lookup_key=lookup_key,
+        active=True,
+    ).first()
 
-        if local_price:
-            logger.info(
-                "Price found in local cache",
-                extra={
-                    "price_id": local_price.id,
-                    "lookup_key": lookup_key,
-                    "tier": "local_cache",
-                },
-            )
-            return local_price.id
-    except Exception:  # noqa: BLE001 - Catch all to ensure Stripe API fallback
-        logger.warning(
-            "Error checking local price cache",
-            exc_info=True,
-            extra={"lookup_key": lookup_key},
+    if local_price:
+        logger.info(
+            "Price found in local cache",
+            extra={
+                "price_id": local_price.id,
+                "lookup_key": lookup_key,
+                "tier": "local_cache",
+            },
         )
+        return local_price.id
 
     # Tier 2: Check Stripe API via lookup_key
     try:
@@ -209,9 +202,6 @@ def get_or_create_price(
             "tier": "created",
         },
     )
-
-    # Sync to local database
-    Price.sync_from_stripe_data(new_price)
 
     return new_price.id
 

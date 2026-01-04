@@ -9,6 +9,9 @@ import attrs
 from djstripe.models import Customer
 from djstripe.models import PaymentMethod
 
+from charj.cards.pricing_service import format_frequency_display
+from charj.cards.pricing_service import format_price_display
+
 if TYPE_CHECKING:
     from djstripe.models import Subscription
 
@@ -77,39 +80,17 @@ class CardDisplay:
         """Return formatted amount like '$5.00' or '$5' for whole dollars."""
         if self.subscription_amount_cents is None:
             return None
-        dollars = self.subscription_amount_cents / 100
-        if dollars == int(dollars):
-            return f"${int(dollars)}"
-        return f"${dollars:.2f}"
+        return format_price_display(self.subscription_amount_cents)
 
     @property
     def subscription_frequency_display(self) -> str | None:
         """Return human-readable frequency like 'monthly' or 'every 3 months'."""
         if not self.subscription_interval:
             return None
-        count = self.subscription_interval_count or 1
-        if count == 1:
-            interval_names = {
-                "day": "daily",
-                "week": "weekly",
-                "month": "monthly",
-                "year": "yearly",
-            }
-            return interval_names.get(
-                self.subscription_interval,
-                f"{self.subscription_interval}ly",
-            )
-        plural_intervals = {
-            "day": "days",
-            "week": "weeks",
-            "month": "months",
-            "year": "years",
-        }
-        interval_plural = plural_intervals.get(
+        return format_frequency_display(
             self.subscription_interval,
-            f"{self.subscription_interval}s",
+            self.subscription_interval_count or 1,
         )
-        return f"every {count} {interval_plural}"
 
     @property
     def subscription_price_display(self) -> str | None:
