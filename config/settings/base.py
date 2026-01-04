@@ -330,3 +330,16 @@ STRIPE_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY", default="sk_test_12345")
 STRIPE_PUBLIC_KEY = env("STRIPE_TEST_PUBLIC_KEY", default="pk_test_12345")
 # Stripe Subscription Settings
 STRIPE_PRICE_ID = env("STRIPE_PRICE_ID", default="")
+STRIPE_PRODUCT_ID = env("STRIPE_PRODUCT_ID", default="")
+
+# Custom Pricing Constraints
+STRIPE_MIN_AMOUNT_CENTS = env.int(
+    "STRIPE_MIN_AMOUNT_CENTS",
+    default=100,
+)  # $1.00 minimum
+STRIPE_MAX_AMOUNT_CENTS = env.int(
+    "STRIPE_MAX_AMOUNT_CENTS",
+    default=100000,
+)  # $1000 maximum
+STRIPE_ALLOWED_INTERVALS = ["day", "week", "month", "year"]
+STRIPE_MAX_INTERVAL_COUNT = env.int("STRIPE_MAX_INTERVAL_COUNT", default=36)

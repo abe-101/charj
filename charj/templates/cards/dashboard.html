@@ -15,16 +15,13 @@
           <div class="summary-card">
             <div class="row align-items-center">
               <div class="col-md-8">
-                <h5 class="mb-1">Total Annual Cost</h5>
-                <p class="mb-0 opacity-90">
-                  {{ cards_data|length }} card{{ cards_data|length|pluralize }} × $1 per year =
-                  <strong>${{ cards_data|length }}/year</strong>
-                </p>
-                <small class="opacity-75">Each card has its own subscription</small>
+                <h5 class="mb-1">Your Active Subscriptions</h5>
+                <p class="mb-0 opacity-90">{{ cards_data|length }} card{{ cards_data|length|pluralize }} with individual pricing</p>
+                <small class="opacity-75">Each card has its own subscription and billing cycle</small>
               </div>
               <div class="col-md-4 text-end">
-                <h1 class="display-4 mb-0">${{ cards_data|length }}</h1>
-                <small class="opacity-75">per year</small>
+                <h1 class="display-4 mb-0">{{ cards_data|length }}</h1>
+                <small class="opacity-75">card{{ cards_data|length|pluralize }}</small>
               </div>
             </div>
           </div>
@@ -41,9 +38,13 @@
                 <div class="card-info">
                   <div class="card-number">•••• •••• •••• {{ card.last4 }}</div>
                   <div class="card-expiry">Expires {{ card.exp_month|stringformat:"02d" }}/{{ card.exp_year }}</div>
+                  {% if card.subscription_price_display %}
+                    <div class="card-subscription-price text-primary fw-semibold">{{ card.subscription_price_display }}</div>
+                  {% endif %}
                   {% if card.next_billing_date %}
-                    <div class="card-next-charge">
-                      <strong>Next charge:</strong> {{ card.next_billing_date|date:"M d, Y" }} ($1)
+                    <div class="card-next-charge small text-muted">
+                      Next charge: {{ card.next_billing_date|date:"M d, Y" }}
+                      {% if card.subscription_amount_display %}({{ card.subscription_amount_display }}){% endif %}
                     </div>
                   {% endif %}
                 </div>
@@ -79,10 +80,10 @@
                 <ol class="mb-0 ps-3">
                   <li class="mb-2">Add your card</li>
                   <li class="mb-2">
-                    We charge <strong>$1 immediately</strong>
+                    Choose your charge amount <strong>(from $0.50)</strong>
                   </li>
                   <li class="mb-2">
-                    Then <strong>$1 once per year</strong>
+                    Pick your billing frequency <strong>(daily to yearly)</strong>
                   </li>
                   <li class="mb-0">Your card stays active ✅</li>
                 </ol>
@@ -108,8 +109,8 @@
                   <h6 class="card-title fw-bold">Add New Card</h6>
                   <p class="card-text text-muted small mb-1">Keep another card active.</p>
                   <ul class="small text-muted mb-3 ps-3">
-                    <li>$1 charged today</li>
-                    <li>Then $1 annually</li>
+                    <li>Choose your amount ($0.50+)</li>
+                    <li>Pick your billing frequency</li>
                   </ul>
                   <a href="{% url 'cards:add' %}" class="btn btn-primary btn-sm">Add Card</a>
                 </div>

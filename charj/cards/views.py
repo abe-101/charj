@@ -10,6 +10,9 @@ from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from djstripe.models import Customer
 
+from charj.cards.pricing_service import InvalidPricingParametersError
+from charj.cards.pricing_service import PricingError
+from charj.cards.pricing_service import get_or_create_price
 from charj.cards.services import get_user_cards
 
 logger = logging.getLogger(__name__)
@@ -83,6 +86,24 @@ class AddCardView(TemplateView):
         logger.info("Add card page accessed")
         context = super().get_context_data(**kwargs)
         context["stripe_public_key"] = settings.STRIPE_PUBLIC_KEY
+        # Pricing configuration for frontend
+        min_amount_cents = getattr(settings, "STRIPE_MIN_AMOUNT_CENTS", 50)
+        max_amount_cents = getattr(settings, "STRIPE_MAX_AMOUNT_CENTS", 100000)
+        max_interval_count = getattr(settings, "STRIPE_MAX_INTERVAL_COUNT", 36)
+
+        # For template display
+        context["min_amount_dollars"] = min_amount_cents / 100
+        context["max_interval_count"] = max_interval_count
+
+        # JSON config for JavaScript (uses json_script template tag)
+        context["pricing_config"] = {
+            "minAmountCents": min_amount_cents,
+            "maxAmountCents": max_amount_cents,
+            "maxIntervalCount": max_interval_count,
+            "defaultAmountCents": 100,
+            "defaultInterval": "year",
+            "defaultIntervalCount": 1,
+        }
         return context
 
 
@@ -135,11 +156,41 @@ def create_setup_intent_view(request):
         return JsonResponse({"error": "An unexpected error occurred"}, status=500)
 
 
+def _cleanup_payment_method(payment_method_id: str, user_id: int) -> None:
+    """
+    Detach a payment method from the customer to clean up after failed subscription.
+
+    Args:
+        payment_method_id: The Stripe payment method ID to detach
+        user_id: The user ID for logging purposes
+    """
+    try:
+        stripe.PaymentMethod.detach(payment_method_id)
+        logger.info(
+            "Payment method detached after subscription failure",
+            extra={
+                "payment_method_id": payment_method_id,
+                "user_id": user_id,
+            },
+        )
+    except stripe.error.StripeError:
+        logger.warning(
+            "Failed to detach payment method after subscription failure",
+            exc_info=True,
+            extra={
+                "payment_method_id": payment_method_id,
+                "user_id": user_id,
+            },
+        )
+
+
 @require_POST
-def create_subscription_view(request):  # noqa: PLR0911 - Multiple validation steps require early returns
-    """Create annual $1 subscription after payment method is confirmed."""
+def create_subscription_view(request):  # noqa: PLR0911, C901
+    """Create subscription with custom pricing after payment method is confirmed."""
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Authentication required"}, status=401)
+
+    payment_method_id = None  # Track for cleanup on failure
 
     try:
         data = json.loads(request.body)
@@ -148,6 +199,22 @@ def create_subscription_view(request):  # noqa: PLR0911 - Multiple validation st
         if not payment_method_id:
             return JsonResponse({"error": "payment_method_id is required"}, status=400)
 
+        # Extract pricing parameters with defaults ($1/year)
+        amount_cents = data.get("amount_cents", 100)
+        interval = data.get("interval", "year")
+        interval_count = data.get("interval_count", 1)
+
+        # Validate types
+        try:
+            amount_cents = int(amount_cents)
+            interval_count = int(interval_count)
+        except (TypeError, ValueError):
+            _cleanup_payment_method(payment_method_id, request.user.id)
+            return JsonResponse(
+                {"error": "amount_cents and interval_count must be integers"},
+                status=400,
+            )
+
         try:
             customer = Customer.objects.get(subscriber=request.user)
         except Customer.DoesNotExist:
@@ -155,6 +222,7 @@ def create_subscription_view(request):  # noqa: PLR0911 - Multiple validation st
                 "Customer not found for user",
                 extra={"user_id": request.user.id},
             )
+            _cleanup_payment_method(payment_method_id, request.user.id)
             return JsonResponse(
                 {"error": "Customer account not found"},
                 status=404,
@@ -172,24 +240,57 @@ def create_subscription_view(request):  # noqa: PLR0911 - Multiple validation st
                     "user_id": request.user.id,
                 },
             )
+            _cleanup_payment_method(payment_method_id, request.user.id)
             return JsonResponse({"error": "Invalid payment method"}, status=403)
 
-        if not settings.STRIPE_PRICE_ID:
-            logger.error("STRIPE_PRICE_ID not configured in settings")
+        # Get or create price for the requested parameters
+        try:
+            price_id = get_or_create_price(
+                amount_cents=amount_cents,
+                interval=interval,
+                interval_count=interval_count,
+            )
+        except InvalidPricingParametersError as e:
+            logger.warning(
+                "Invalid pricing parameters",
+                extra={
+                    "user_id": request.user.id,
+                    "amount_cents": amount_cents,
+                    "interval": interval,
+                    "interval_count": interval_count,
+                    "error": str(e),
+                },
+            )
+            _cleanup_payment_method(payment_method_id, request.user.id)
+            return JsonResponse({"error": str(e)}, status=400)
+        except PricingError as e:
+            logger.exception(
+                "Pricing service error",
+                extra={
+                    "user_id": request.user.id,
+                    "amount_cents": amount_cents,
+                    "interval": interval,
+                    "interval_count": interval_count,
+                },
+            )
+            _cleanup_payment_method(payment_method_id, request.user.id)
             return JsonResponse(
-                {"error": "Subscription pricing not configured"},
+                {"error": f"Failed to configure pricing: {e!s}"},
                 status=500,
             )
 
-        # Create subscription
+        # Create subscription with dynamic price
         subscription = stripe.Subscription.create(
             customer=customer.id,
-            items=[{"price": settings.STRIPE_PRICE_ID}],
+            items=[{"price": price_id}],
             default_payment_method=payment_method_id,
             metadata={
                 "user_id": request.user.id,
                 "user_email": request.user.email,
                 "payment_method_id": payment_method_id,
+                "amount_cents": str(amount_cents),
+                "interval": interval,
+                "interval_count": str(interval_count),
             },
         )
 
@@ -200,6 +301,10 @@ def create_subscription_view(request):  # noqa: PLR0911 - Multiple validation st
                 "customer_id": customer.id,
                 "payment_method_id": payment_method_id,
                 "user_id": request.user.id,
+                "price_id": price_id,
+                "amount_cents": amount_cents,
+                "interval": interval,
+                "interval_count": interval_count,
             },
         )
 
@@ -218,6 +323,8 @@ def create_subscription_view(request):  # noqa: PLR0911 - Multiple validation st
             "Stripe error creating subscription",
             extra={"user_id": request.user.id},
         )
+        if payment_method_id:
+            _cleanup_payment_method(payment_method_id, request.user.id)
         return JsonResponse(
             {"error": f"Failed to create subscription: {e!s}"},
             status=500,
@@ -227,4 +334,6 @@ def create_subscription_view(request):  # noqa: PLR0911 - Multiple validation st
             "Unexpected error creating subscription",
             extra={"user_id": request.user.id},
         )
+        if payment_method_id:
+            _cleanup_payment_method(payment_method_id, request.user.id)
         return JsonResponse({"error": "An unexpected error occurred"}, status=500)

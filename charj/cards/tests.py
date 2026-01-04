@@ -6,7 +6,16 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from djstripe.models import Customer
 from djstripe.models import PaymentMethod
+from djstripe.models import Price
+from djstripe.models import Product
 
+from charj.cards.pricing_service import InvalidPricingParametersError
+from charj.cards.pricing_service import PricingError
+from charj.cards.pricing_service import format_frequency_display
+from charj.cards.pricing_service import format_price_display
+from charj.cards.pricing_service import generate_lookup_key
+from charj.cards.pricing_service import get_or_create_price
+from charj.cards.pricing_service import validate_pricing_parameters
 from charj.cards.services import CardDisplay
 from charj.cards.services import get_user_cards
 from charj.cards.views import add_card_view
@@ -120,7 +129,8 @@ class TestCreateSubscriptionView:
         settings,
     ):
         """Should create subscription with valid payment method."""
-        settings.STRIPE_PRICE_ID = "price_test_123"
+        # Now uses dynamic pricing via STRIPE_PRODUCT_ID
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
         # Create customer first (normally done by SetupIntent view)
         Customer.get_or_create(subscriber=user)
 
@@ -160,14 +170,14 @@ class TestCreateSubscriptionView:
         data = json.loads(response.content)
         assert "payment_method_id" in data["error"]
 
-    def test_validates_price_id_configured(
+    def test_rejects_when_product_id_not_configured(
         self,
         user: User,
         rf: RequestFactory,
         settings,
     ):
-        """Should reject requests when STRIPE_PRICE_ID not configured."""
-        settings.STRIPE_PRICE_ID = ""
+        """Should reject requests when STRIPE_PRODUCT_ID not configured."""
+        settings.STRIPE_PRODUCT_ID = ""
         # Create customer first (normally done by SetupIntent view)
         Customer.get_or_create(subscriber=user)
 
@@ -180,7 +190,7 @@ class TestCreateSubscriptionView:
         response = create_subscription_view(request)
         assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
         data = json.loads(response.content)
-        assert "pricing not configured" in data["error"]
+        assert "STRIPE_PRODUCT_ID not configured" in data["error"]
 
     def test_requires_post_method(self, user: User, rf: RequestFactory):
         """GET requests should be rejected."""
@@ -389,3 +399,538 @@ class TestDashboardViewWithCards:
         card = response.context_data["cards_data"][0]
         assert card.brand == "visa"
         assert card.last4 == "9999"
+
+
+class TestPricingServiceValidation:
+    """Tests for pricing service validation functions."""
+
+    def test_validate_pricing_parameters_valid(self, settings):
+        """Valid parameters should not raise exceptions."""
+        settings.STRIPE_MIN_AMOUNT_CENTS = 50
+        # No exception means validation passed
+        validate_pricing_parameters(100, "year", 1)
+        validate_pricing_parameters(50, "month", 1)  # Minimum amount
+        validate_pricing_parameters(100000, "week", 36)  # Max amount and interval count
+        validate_pricing_parameters(500, "day", 7)
+
+    def test_validate_pricing_parameters_amount_too_low(self, settings):
+        """Amount below minimum should raise error."""
+        settings.STRIPE_MIN_AMOUNT_CENTS = 50
+        with pytest.raises(InvalidPricingParametersError) as exc_info:
+            validate_pricing_parameters(49, "year", 1)
+        assert "at least 50 cents" in str(exc_info.value)
+
+    def test_validate_pricing_parameters_amount_too_high(self, settings):
+        """Amount above maximum should raise error."""
+        settings.STRIPE_MAX_AMOUNT_CENTS = 100000
+        with pytest.raises(InvalidPricingParametersError) as exc_info:
+            validate_pricing_parameters(100001, "year", 1)
+        assert "cannot exceed" in str(exc_info.value)
+
+    def test_validate_pricing_parameters_invalid_interval(self, settings):
+        """Invalid interval should raise error."""
+        settings.STRIPE_ALLOWED_INTERVALS = ["day", "week", "month", "year"]
+        with pytest.raises(InvalidPricingParametersError) as exc_info:
+            validate_pricing_parameters(100, "biweekly", 1)
+        assert "Invalid interval" in str(exc_info.value)
+
+    def test_validate_pricing_parameters_interval_count_zero(self):
+        """Interval count of 0 should raise error."""
+        with pytest.raises(InvalidPricingParametersError) as exc_info:
+            validate_pricing_parameters(100, "year", 0)
+        assert "at least 1" in str(exc_info.value)
+
+    def test_validate_pricing_parameters_interval_count_negative(self):
+        """Negative interval count should raise error."""
+        with pytest.raises(InvalidPricingParametersError) as exc_info:
+            validate_pricing_parameters(100, "year", -1)
+        assert "at least 1" in str(exc_info.value)
+
+    def test_validate_pricing_parameters_interval_count_too_high(self, settings):
+        """Interval count above maximum should raise error."""
+        settings.STRIPE_MAX_INTERVAL_COUNT = 36
+        with pytest.raises(InvalidPricingParametersError) as exc_info:
+            validate_pricing_parameters(100, "year", 37)
+        assert "cannot exceed 36" in str(exc_info.value)
+
+
+class TestPricingServiceLookupKey:
+    """Tests for lookup key generation."""
+
+    def test_generate_lookup_key_basic(self):
+        """Generate correct lookup key format."""
+        assert generate_lookup_key(100, "year", 1) == "year_1_100"
+        assert generate_lookup_key(500, "month", 1) == "month_1_500"
+        assert generate_lookup_key(1000, "week", 2) == "week_2_1000"
+        assert generate_lookup_key(50, "day", 7) == "day_7_50"
+
+    def test_generate_lookup_key_large_values(self):
+        """Lookup keys work with large values."""
+        assert generate_lookup_key(100000, "month", 36) == "month_36_100000"
+
+
+class TestPricingServiceFormatting:
+    """Tests for display formatting functions."""
+
+    def test_format_price_display_whole_dollars(self):
+        """Whole dollar amounts should not show cents."""
+        assert format_price_display(100) == "$1"
+        assert format_price_display(500) == "$5"
+        assert format_price_display(10000) == "$100"
+
+    def test_format_price_display_with_cents(self):
+        """Non-whole dollar amounts should show cents."""
+        assert format_price_display(50) == "$0.50"
+        assert format_price_display(199) == "$1.99"
+        assert format_price_display(1550) == "$15.50"
+
+    def test_format_frequency_display_single_interval(self):
+        """Single interval counts show friendly names."""
+        assert format_frequency_display("day", 1) == "daily"
+        assert format_frequency_display("week", 1) == "weekly"
+        assert format_frequency_display("month", 1) == "monthly"
+        assert format_frequency_display("year", 1) == "yearly"
+
+    def test_format_frequency_display_multiple_intervals(self):
+        """Multiple interval counts show 'every X intervals'."""
+        assert format_frequency_display("day", 7) == "every 7 days"
+        assert format_frequency_display("week", 2) == "every 2 weeks"
+        assert format_frequency_display("month", 3) == "every 3 months"
+        assert format_frequency_display("year", 2) == "every 2 years"
+
+
+class TestGetOrCreatePrice:
+    """Tests for the main get_or_create_price function."""
+
+    def test_creates_new_price_when_not_cached(self, settings, db):
+        """Should create new price via Stripe API when not in cache."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        price_id = get_or_create_price(100, "year", 1)
+        assert price_id == "price_test_dynamic"
+
+    def test_rejects_invalid_parameters(self, settings):
+        """Should reject invalid pricing parameters."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        with pytest.raises(InvalidPricingParametersError):
+            get_or_create_price(10, "year", 1)  # Below minimum
+
+    def test_raises_error_when_product_id_not_configured(self, settings, db):
+        """Should raise error when STRIPE_PRODUCT_ID not set."""
+        settings.STRIPE_PRODUCT_ID = ""
+        with pytest.raises(PricingError) as exc_info:
+            get_or_create_price(100, "year", 1)
+        assert "STRIPE_PRODUCT_ID not configured" in str(exc_info.value)
+
+
+class TestCardDisplayPriceProperties:
+    """Tests for CardDisplay price-related properties."""
+
+    def test_subscription_amount_display_whole_dollar(self):
+        """Whole dollar amounts display without cents."""
+        card = CardDisplay(
+            payment_method_id="pm_1",
+            brand="visa",
+            brand_image="visa.png",
+            last4="4242",
+            exp_month=12,
+            exp_year=2030,
+            is_default=False,
+            subscription_amount_cents=100,
+        )
+        assert card.subscription_amount_display == "$1"
+
+    def test_subscription_amount_display_with_cents(self):
+        """Non-whole dollar amounts display with cents."""
+        card = CardDisplay(
+            payment_method_id="pm_1",
+            brand="visa",
+            brand_image="visa.png",
+            last4="4242",
+            exp_month=12,
+            exp_year=2030,
+            is_default=False,
+            subscription_amount_cents=550,
+        )
+        assert card.subscription_amount_display == "$5.50"
+
+    def test_subscription_amount_display_none(self):
+        """None amount returns None display."""
+        card = CardDisplay(
+            payment_method_id="pm_1",
+            brand="visa",
+            brand_image="visa.png",
+            last4="4242",
+            exp_month=12,
+            exp_year=2030,
+            is_default=False,
+        )
+        assert card.subscription_amount_display is None
+
+    def test_subscription_frequency_display_monthly(self):
+        """Monthly interval displays correctly."""
+        card = CardDisplay(
+            payment_method_id="pm_1",
+            brand="visa",
+            brand_image="visa.png",
+            last4="4242",
+            exp_month=12,
+            exp_year=2030,
+            is_default=False,
+            subscription_interval="month",
+            subscription_interval_count=1,
+        )
+        assert card.subscription_frequency_display == "monthly"
+
+    def test_subscription_frequency_display_every_3_months(self):
+        """Multiple intervals display correctly."""
+        card = CardDisplay(
+            payment_method_id="pm_1",
+            brand="visa",
+            brand_image="visa.png",
+            last4="4242",
+            exp_month=12,
+            exp_year=2030,
+            is_default=False,
+            subscription_interval="month",
+            subscription_interval_count=3,
+        )
+        assert card.subscription_frequency_display == "every 3 months"
+
+    def test_subscription_price_display_combined(self):
+        """Combined price and frequency display correctly."""
+        card = CardDisplay(
+            payment_method_id="pm_1",
+            brand="visa",
+            brand_image="visa.png",
+            last4="4242",
+            exp_month=12,
+            exp_year=2030,
+            is_default=False,
+            subscription_amount_cents=500,
+            subscription_interval="month",
+            subscription_interval_count=1,
+        )
+        assert card.subscription_price_display == "$5/month"
+
+    def test_subscription_price_display_every_3_months(self):
+        """Combined price with multiple intervals."""
+        card = CardDisplay(
+            payment_method_id="pm_1",
+            brand="visa",
+            brand_image="visa.png",
+            last4="4242",
+            exp_month=12,
+            exp_year=2030,
+            is_default=False,
+            subscription_amount_cents=1000,
+            subscription_interval="month",
+            subscription_interval_count=3,
+        )
+        assert card.subscription_price_display == "$10 every 3 months"
+
+
+class TestCreateSubscriptionViewWithCustomPricing:
+    """Tests for subscription creation with custom pricing parameters."""
+
+    def test_creates_subscription_with_default_pricing(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should create subscription with default $1/year when no pricing params."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps({"payment_method_id": "pm_test_123"}),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.OK
+        data = json.loads(response.content)
+        assert data["success"] is True
+
+    def test_creates_subscription_with_custom_amount(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should create subscription with custom amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": 500,
+                    "interval": "month",
+                    "interval_count": 1,
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.OK
+        data = json.loads(response.content)
+        assert data["success"] is True
+
+    def test_rejects_invalid_amount(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should reject subscription with invalid amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MIN_AMOUNT_CENTS = 50
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": 10,  # Below minimum
+                    "interval": "year",
+                    "interval_count": 1,
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "at least" in data["error"]
+
+    def test_rejects_invalid_interval(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should reject subscription with invalid interval."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": 100,
+                    "interval": "biweekly",  # Invalid
+                    "interval_count": 1,
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "Invalid interval" in data["error"]
+
+    def test_cleans_up_payment_method_on_pricing_error(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+        mock_stripe_api,
+    ):
+        """Should detach payment method when pricing validation fails."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MIN_AMOUNT_CENTS = 50
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": 10,  # Below minimum - will fail
+                    "interval": "year",
+                    "interval_count": 1,
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+
+        # Should fail with bad request
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+
+        # Check that detach was called (via mock_stripe_api)
+        detach_calls = [
+            call for call in mock_stripe_api.calls if "detach" in call.request.url
+        ]
+        assert len(detach_calls) == 1
+
+    def test_rejects_non_integer_amount(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should reject subscription with non-integer amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": "not_a_number",
+                    "interval": "year",
+                    "interval_count": 1,
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "must be integers" in data["error"]
+
+    def test_rejects_non_integer_interval_count(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should reject subscription with non-integer interval_count."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {
+                    "payment_method_id": "pm_test_123",
+                    "amount_cents": 100,
+                    "interval": "year",
+                    "interval_count": "not_a_number",
+                },
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "must be integers" in data["error"]
+
+    def test_rejects_invalid_json(
+        self,
+        user: User,
+        rf: RequestFactory,
+    ):
+        """Should reject request with invalid JSON body."""
+        request = rf.post(
+            "/fake-url/",
+            data="not valid json",
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        data = json.loads(response.content)
+        assert "Invalid JSON" in data["error"]
+
+    def test_handles_all_interval_types(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+    ):
+        """Should accept all valid interval types."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        for interval in ["day", "week", "month", "year"]:
+            request = rf.post(
+                "/fake-url/",
+                data=json.dumps(
+                    {
+                        "payment_method_id": "pm_test_123",
+                        "amount_cents": 100,
+                        "interval": interval,
+                        "interval_count": 1,
+                    },
+                ),
+                content_type="application/json",
+            )
+            request.user = user
+            response = create_subscription_view(request)
+            assert response.status_code == HTTPStatus.OK, f"Failed: {interval}"
+
+
+class TestPricingServiceTieredLookup:
+    """Tests for the tiered price lookup strategy."""
+
+    def test_finds_price_in_local_cache(self, settings, db):
+        """Should return cached price from local database (Tier 1)."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+
+        # Create product first
+        product = Product.objects.create(
+            id="prod_test_123",
+            livemode=False,
+            name="Test Product",
+        )
+
+        # Create a cached price with matching lookup_key
+        Price.objects.create(
+            id="price_cached_123",
+            lookup_key="year_1_100",
+            active=True,
+            livemode=False,
+            currency="usd",
+            product=product,
+            stripe_data={
+                "id": "price_cached_123",
+                "unit_amount": 100,
+                "currency": "usd",
+                "recurring": {
+                    "interval": "year",
+                    "interval_count": 1,
+                },
+            },
+        )
+
+        price_id = get_or_create_price(100, "year", 1)
+        assert price_id == "price_cached_123"
+
+    def test_boundary_min_amount(self, settings, db):
+        """Should accept exact minimum amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MIN_AMOUNT_CENTS = 100
+        # Should not raise
+        price_id = get_or_create_price(100, "year", 1)
+        assert price_id is not None
+
+    def test_boundary_max_amount(self, settings, db):
+        """Should accept exact maximum amount."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MAX_AMOUNT_CENTS = 100000
+        # Should not raise
+        price_id = get_or_create_price(100000, "year", 1)
+        assert price_id is not None
+
+    def test_boundary_max_interval_count(self, settings, db):
+        """Should accept exact maximum interval count."""
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        settings.STRIPE_MAX_INTERVAL_COUNT = 36
+        # Should not raise
+        price_id = get_or_create_price(100, "year", 36)
+        assert price_id is not None
