@@ -155,7 +155,7 @@ dev = [
 [project]
 name = "charj"
 version = "0.1.0"
-description = "Keep your credit cards active with automatic $1 annual charges. Prevent account closures and protect your credit score."
+description = "Keep your credit cards active with small, automated charges on your schedule. Prevent account closures and protect your credit score."
 readme = "README.md"
 
 license = { text = "GPLv3" }
