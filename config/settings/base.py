@@ -70,6 +70,7 @@ DJANGO_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.sites",
+    "django.contrib.sitemaps",  # SEO: XML sitemap generation
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",  # Handy template tags
@@ -116,11 +117,23 @@ LOGIN_URL = "account_login"
 LOGIN_REQUIRED_IGNORE_VIEW_NAMES = [
     # Public pages
     "home",
+    "about",
+    "features",
+    "how-it-works",
+    "pricing",
+    "robots",
+    "django.contrib.sitemaps.views.sitemap",
 ]
 # URLs that should be accessible without authentication
 # Used by CustomLoginRequiredMiddleware
 OPEN_URLS = [
     "/",  # Home page
+    "/about/",  # About page
+    "/features/",  # Features page
+    "/how-it-works/",  # How it works page
+    "/pricing/",  # Pricing page
+    "/sitemap.xml",  # Sitemap
+    "/robots.txt",  # Robots.txt
     "/djstripe/webhook/*",  # Stripe webhooks (with wildcard for UUID paths)
 ]
 

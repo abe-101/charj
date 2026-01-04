@@ -1,0 +1,409 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Primary Meta Tags -->
+    <title>Features - Charj Credit Card Keep-Alive Service | Security, Automation, Flexibility</title>
+    <meta name="title"
+          content="Features - Charj Credit Card Keep-Alive Service | Security, Automation, Flexibility" />
+    <meta name="description"
+          content="Explore Charj's features: bank-level security with Stripe, fully automated card charges, flexible pricing you control, and easy dashboard management. Keep your credit cards active securely." />
+    <meta name="keywords"
+          content="credit card keep alive features, automated card charges, Stripe security, PCI compliant payment service, credit card inactivity prevention, flexible billing" />
+    <meta name="author" content="Abe Hanoka" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://charj.cc/features/" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://charj.cc/features/" />
+    <meta property="og:title"
+          content="Features - Charj Credit Card Keep-Alive Service" />
+    <meta property="og:description"
+          content="Explore Charj's features: bank-level security, automated charges, flexible pricing, and easy management. Keep your credit cards active securely." />
+    <meta property="og:image" content="https://charj.cc/og-image.png" />
+    <meta property="og:site_name" content="Charj" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://charj.cc/features/" />
+    <meta property="twitter:title"
+          content="Features - Charj Credit Card Keep-Alive Service" />
+    <meta property="twitter:description"
+          content="Explore Charj's features: bank-level security, automated charges, flexible pricing, and easy management." />
+    <meta property="twitter:image" content="https://charj.cc/twitter-image.png" />
+    <!-- Favicon -->
+    <link rel="icon"
+          type="image/x-icon"
+          href="{% static 'images/favicons/favicon.ico' %}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+    <!-- Bootstrap CSS via Django Compressor -->
+    {% load compress %}
+
+    {% compress css %}
+      <link rel="stylesheet"
+            type="text/x-scss"
+            href="{% static 'css/custom-bootstrap.scss' %}" />
+    {% endcompress %}
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Charj Features",
+        "description": "Key features of the Charj credit card keep-alive service",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Bank-Level Security",
+            "description": "Powered by Stripe with PCI DSS Level 1 certification. We never store your card data."
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Fully Automated",
+            "description": "Set it once and forget it. Automatic charges on your chosen schedule."
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Flexible Pricing",
+            "description": "Choose your own amount and billing frequency. No hidden fees."
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Easy Dashboard",
+            "description": "Simple interface to manage all your cards in one place."
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://charj.cc/"
+        }, {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Features",
+          "item": "https://charj.cc/features/"
+        }]
+      }
+    </script>
+  </head>
+  <body class="landing-page">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">Charj</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'features' %}">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'how-it-works' %}">How It Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pricing' %}">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="container mt-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Features</li>
+      </ol>
+    </nav>
+
+    <!-- Features Hero Section -->
+    <section class="hero-section" style="padding: 4rem 0;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 col-xl-8 mx-auto">
+            <div class="hero-content text-center">
+              <h1 class="hero-title">
+                Powerful <span class="accent">Features</span>
+              </h1>
+              <p class="hero-subtitle">Everything you need to keep your credit cards active and your credit score protected.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Security Feature -->
+    <section class="bg-light" id="security">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="section-label">Feature #1</div>
+            <h2>Bank-Level Security</h2>
+            <p class="lead">
+              Your financial security is our top priority. Charj is powered by Stripe,
+              the same payment infrastructure trusted by Amazon, Google, Shopify, and
+              millions of businesses worldwide.
+            </p>
+            <ul class="list-unstyled">
+              <li class="mb-3">
+                <strong>PCI DSS Level 1 Certified</strong> - The highest level of payment security certification
+              </li>
+              <li class="mb-3">
+                <strong>We Never Store Card Data</strong> - Your card numbers never touch our servers
+              </li>
+              <li class="mb-3">
+                <strong>End-to-End Encryption</strong> - All data is encrypted in transit and at rest
+              </li>
+              <li class="mb-3">
+                <strong>3D Secure Support</strong> - Extra authentication for supported cards
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card text-center p-5">
+              <div class="feature-icon" style="font-size: 4rem;">🔒</div>
+              <h3 class="mt-3">Secured by Stripe</h3>
+              <p class="mb-0">PCI DSS Level 1 Compliant</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Automation Feature -->
+    <section id="automation">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 order-lg-2">
+            <div class="section-label">Feature #2</div>
+            <h2>Fully Automated</h2>
+            <p class="lead">
+              Set it once and forget it. Charj runs completely automatically in the background,
+              ensuring your credit cards stay active without any effort on your part.
+            </p>
+            <ul class="list-unstyled">
+              <li class="mb-3">
+                <strong>Automatic Scheduling</strong> - Charges run on your chosen schedule: daily, weekly, monthly, or yearly
+              </li>
+              <li class="mb-3">
+                <strong>No Manual Intervention</strong> - Once set up, everything runs automatically
+              </li>
+              <li class="mb-3">
+                <strong>Email Notifications</strong> - Get notified about successful charges and any issues
+              </li>
+              <li class="mb-3">
+                <strong>Retry Logic</strong> - Failed charges are automatically retried to ensure success
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6 order-lg-1">
+            <div class="feature-card text-center p-5">
+              <div class="feature-icon" style="font-size: 4rem;">⚙️</div>
+              <h3 class="mt-3">Set It & Forget It</h3>
+              <p class="mb-0">100% Automated Operation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flexible Pricing Feature -->
+    <section class="bg-light" id="flexible-pricing">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="section-label">Feature #3</div>
+            <h2>Flexible Pricing</h2>
+            <p class="lead">
+              You're in complete control. Choose exactly how much you want to pay
+              and how often. No hidden fees, no surprises, no contracts.
+            </p>
+            <ul class="list-unstyled">
+              <li class="mb-3">
+                <strong>Choose Your Amount</strong> - Set any amount starting from $0.50
+              </li>
+              <li class="mb-3">
+                <strong>Choose Your Frequency</strong> - Daily, weekly, monthly, or yearly billing
+              </li>
+              <li class="mb-3">
+                <strong>Per-Card Pricing</strong> - Each card has its own subscription you control
+              </li>
+              <li class="mb-3">
+                <strong>Cancel Anytime</strong> - No contracts, no cancellation fees
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6">
+            <div class="feature-card text-center p-5">
+              <div class="feature-icon" style="font-size: 4rem;">💰</div>
+              <h3 class="mt-3">You Choose Your Price</h3>
+              <p class="mb-0">Starting at just $0.50</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Feature -->
+    <section id="dashboard">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 order-lg-2">
+            <div class="section-label">Feature #4</div>
+            <h2>Easy Dashboard Management</h2>
+            <p class="lead">
+              A simple, intuitive dashboard where you can see all your cards at a glance,
+              check payment status, and manage subscriptions with just a few clicks.
+            </p>
+            <ul class="list-unstyled">
+              <li class="mb-3">
+                <strong>All Cards in One Place</strong> - View and manage all your active cards
+              </li>
+              <li class="mb-3">
+                <strong>Payment History</strong> - Track all charges and their status
+              </li>
+              <li class="mb-3">
+                <strong>Easy Card Addition</strong> - Add new cards in seconds with Stripe Elements
+              </li>
+              <li class="mb-3">
+                <strong>Quick Cancellation</strong> - Remove cards with one click through Stripe's portal
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6 order-lg-1">
+            <div class="feature-card text-center p-5">
+              <div class="feature-icon" style="font-size: 4rem;">📊</div>
+              <h3 class="mt-3">Simple Dashboard</h3>
+              <p class="mb-0">Everything at a Glance</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional Features -->
+    <section class="bg-light">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">More Benefits</div>
+          <h2>Additional Features</h2>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-4">
+            <div class="feature-card">
+              <div class="feature-icon">💳</div>
+              <h3>Multiple Cards</h3>
+              <p>Add as many credit cards as you want. Each card gets its own independent subscription.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="feature-card">
+              <div class="feature-icon">📧</div>
+              <h3>Email Notifications</h3>
+              <p>Stay informed with email notifications for successful charges and any payment issues.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="feature-card">
+              <div class="feature-icon">🌐</div>
+              <h3>24/7 Access</h3>
+              <p>Access your dashboard anytime, anywhere. Your cards are always being monitored.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="feature-card">
+              <div class="feature-icon">🔄</div>
+              <h3>Automatic Retry</h3>
+              <p>If a charge fails, we automatically retry to ensure your cards stay active.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="feature-card">
+              <div class="feature-icon">🏦</div>
+              <h3>All Major Cards</h3>
+              <p>Works with Visa, Mastercard, American Express, Discover, and more.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="feature-card">
+              <div class="feature-icon">✅</div>
+              <h3>Instant Activation</h3>
+              <p>Your card starts being protected immediately after you add it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Experience These Features?</h2>
+        <p>Start protecting your credit cards today</p>
+        <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started Free</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'features' %}">Features</a>
+          <a href="{% url 'how-it-works' %}">How It Works</a>
+          <a href="{% url 'pricing' %}">Pricing</a>
+          <a href="{% url 'about' %}">About</a>
+          <a href="{% url 'account_login' %}">Sign In</a>
+        </div>
+        <p>
+          &copy; <span id="current-year"></span> Charj. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
+            integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

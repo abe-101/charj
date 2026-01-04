@@ -1,0 +1,480 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Primary Meta Tags -->
+    <title>Pricing - Charj Credit Card Keep-Alive Service | You Choose Your Price</title>
+    <meta name="title"
+          content="Pricing - Charj Credit Card Keep-Alive Service | You Choose Your Price" />
+    <meta name="description"
+          content="Charj pricing is completely flexible - you choose your amount and frequency. Start from just $0.50 per year. No hidden fees, no contracts, cancel anytime. Keep your credit cards active affordably." />
+    <meta name="keywords"
+          content="credit card keep alive pricing, charj cost, credit card inactivity service price, affordable credit protection, flexible pricing credit card service" />
+    <meta name="author" content="Abe Hanoka" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://charj.cc/pricing/" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://charj.cc/pricing/" />
+    <meta property="og:title"
+          content="Pricing - Charj Credit Card Keep-Alive Service | You Choose Your Price" />
+    <meta property="og:description"
+          content="Charj pricing is completely flexible - you choose your amount and frequency. Start from just $0.50 per year. No hidden fees, cancel anytime." />
+    <meta property="og:image" content="https://charj.cc/og-image.png" />
+    <meta property="og:site_name" content="Charj" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://charj.cc/pricing/" />
+    <meta property="twitter:title"
+          content="Pricing - Charj Credit Card Keep-Alive Service | You Choose Your Price" />
+    <meta property="twitter:description"
+          content="Charj pricing is flexible - you choose your amount. Start from $0.50/year. No hidden fees." />
+    <meta property="twitter:image" content="https://charj.cc/twitter-image.png" />
+    <!-- Favicon -->
+    <link rel="icon"
+          type="image/x-icon"
+          href="{% static 'images/favicons/favicon.ico' %}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+    <!-- Bootstrap CSS via Django Compressor -->
+    {% load compress %}
+
+    {% compress css %}
+      <link rel="stylesheet"
+            type="text/x-scss"
+            href="{% static 'css/custom-bootstrap.scss' %}" />
+    {% endcompress %}
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Charj Credit Card Keep-Alive Service",
+        "description": "Automated credit card activity service that prevents account closures due to inactivity.",
+        "brand": {
+          "@type": "Brand",
+          "name": "Charj"
+        },
+        "offers": {
+          "@type": "AggregateOffer",
+          "priceCurrency": "USD",
+          "lowPrice": "0.50",
+          "highPrice": "1000.00",
+          "offerCount": "1",
+          "availability": "https://schema.org/InStock",
+          "priceValidUntil": "2026-12-31",
+          "seller": {
+            "@type": "Organization",
+            "name": "Charj"
+          }
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://charj.cc/"
+        }, {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Pricing",
+          "item": "https://charj.cc/pricing/"
+        }]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [{
+          "@type": "Question",
+          "name": "How much does Charj cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Charj lets you choose your own pricing. You can select any amount starting from $0.50 and pick your billing frequency (daily, weekly, monthly, or yearly). The most popular option is $1 per year per card."
+          }
+        }, {
+          "@type": "Question",
+          "name": "Are there any hidden fees?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, there are absolutely no hidden fees. You only pay the amount you choose on the schedule you select. No setup fees, no cancellation fees, no surprises."
+          }
+        }, {
+          "@type": "Question",
+          "name": "Can I cancel my subscription?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, you can cancel any card subscription at any time through your dashboard. There are no contracts or cancellation fees. Once cancelled, no future charges will occur."
+          }
+        }]
+      }
+    </script>
+  </head>
+  <body class="landing-page">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">Charj</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'features' %}">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'how-it-works' %}">How It Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'pricing' %}">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="container mt-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Pricing</li>
+      </ol>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="padding: 4rem 0;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 col-xl-8 mx-auto">
+            <div class="hero-content text-center">
+              <h1 class="hero-title">
+                Simple, <span class="accent">Honest</span> Pricing
+              </h1>
+              <p class="hero-subtitle">You choose your price. No hidden fees. Cancel anytime.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Pricing Section -->
+    <section class="bg-light">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="pricing-card text-center">
+              <div class="price-tag">
+                <div class="price">
+                  <span class="currency">You</span> Choose
+                </div>
+                <div class="price-period">your amount and frequency</div>
+              </div>
+              <p class="lead mt-4">
+                Charj is different. Instead of forcing you into a fixed price,
+                you get to decide exactly what you pay.
+              </p>
+              <div class="row g-3 mt-4">
+                <div class="col-6 col-md-3">
+                  <div class="card p-3">
+                    <div class="h4 mb-0">$0.50+</div>
+                    <small class="text-muted">per day</small>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card p-3">
+                    <div class="h4 mb-0">$0.50+</div>
+                    <small class="text-muted">per week</small>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card p-3">
+                    <div class="h4 mb-0">$0.50+</div>
+                    <small class="text-muted">per month</small>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card p-3 border-primary" style="border-width: 2px;">
+                    <div class="h4 mb-0">$1</div>
+                    <small class="text-muted">per year</small>
+                    <span class="badge bg-primary mt-2">Popular</span>
+                  </div>
+                </div>
+              </div>
+              <ul class="pricing-features mt-4 text-start">
+                <li>Flexible amount - choose any amount from $0.50 to $1,000</li>
+                <li>Flexible schedule - daily, weekly, monthly, or yearly</li>
+                <li>Unlimited cards - add as many cards as you want</li>
+                <li>Each card has its own subscription</li>
+                <li>Secure Stripe processing</li>
+                <li>Email notifications included</li>
+                <li>24/7 dashboard access</li>
+                <li>Cancel anytime - no fees, no questions</li>
+              </ul>
+              <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg w-100 mt-4">Get Started Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Examples -->
+    <section>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Examples</div>
+          <h2>Popular Pricing Choices</h2>
+          <p class="section-description">Here's what other users typically choose</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <div class="feature-icon" style="font-size: 2.5rem;">🏆</div>
+              <h3>Most Popular</h3>
+              <div class="h2 my-3">$1/year</div>
+              <p>
+                Just $1 per year per card. The most affordable way to keep your cards active.
+                That's less than a cup of coffee to protect years of credit history.
+              </p>
+              <span class="badge bg-success">Recommended</span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <div class="feature-icon" style="font-size: 2.5rem;">📅</div>
+              <h3>Monthly Peace of Mind</h3>
+              <div class="h2 my-3">$1/month</div>
+              <p>
+                A small monthly charge that keeps your card active and appearing regularly
+                on your statements. Great for cards you want to monitor more frequently.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card text-center">
+              <div class="feature-icon" style="font-size: 2.5rem;">💪</div>
+              <h3>Maximum Activity</h3>
+              <div class="h2 my-3">$5/month</div>
+              <p>
+                For users who want slightly larger charges for more visible card activity.
+                Some prefer this to create a clearer pattern of use.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- No Hidden Fees Section -->
+    <section class="bg-light">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Transparency</div>
+          <h2>No Hidden Fees - Ever</h2>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="card p-4 h-100">
+                  <h4 class="text-success">What You Pay</h4>
+                  <ul class="list-unstyled mb-0">
+                    <li class="mb-2">✅ The amount you choose</li>
+                    <li class="mb-2">✅ On the schedule you select</li>
+                    <li class="mb-2">✅ Per card you add</li>
+                    <li>✅ That's it!</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card p-4 h-100">
+                  <h4 class="text-danger">What You Don't Pay</h4>
+                  <ul class="list-unstyled mb-0">
+                    <li class="mb-2">❌ No setup fees</li>
+                    <li class="mb-2">❌ No account fees</li>
+                    <li class="mb-2">❌ No cancellation fees</li>
+                    <li>❌ No hidden charges</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cancel Anytime -->
+    <section>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Flexibility</div>
+          <h2>Cancel Anytime</h2>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center">
+            <p class="lead">
+              We believe in earning your business every day. That's why there are no contracts
+              and no cancellation fees. You can cancel any card subscription at any moment
+              through your dashboard.
+            </p>
+            <div class="row g-4 mt-4">
+              <div class="col-md-4">
+                <div class="feature-icon">📋</div>
+                <h4>No Contracts</h4>
+                <p>No minimum terms or commitments</p>
+              </div>
+              <div class="col-md-4">
+                <div class="feature-icon">💸</div>
+                <h4>No Fees</h4>
+                <p>No cancellation or early termination fees</p>
+              </div>
+              <div class="col-md-4">
+                <div class="feature-icon">⚡</div>
+                <h4>Instant</h4>
+                <p>Cancel immediately, no waiting period</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing FAQ -->
+    <section class="bg-light">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">FAQ</div>
+          <h2>Pricing Questions</h2>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="faq-item">
+              <details open>
+                <summary>How much does Charj cost?</summary>
+                <div class="faq-answer">
+                  You choose your own price! Select any amount starting from $0.50 and pick
+                  your billing frequency (daily, weekly, monthly, or yearly). Most users choose
+                  $1 per year per card - that's less than the cost of a cup of coffee to protect
+                  years of credit history.
+                </div>
+              </details>
+            </div>
+            <div class="faq-item">
+              <details>
+                <summary>Why do I choose the price?</summary>
+                <div class="faq-answer">
+                  We believe in flexibility. Different users have different needs and comfort levels.
+                  Some prefer tiny annual charges, others want monthly visibility. By letting you
+                  choose, you get exactly what works for you.
+                </div>
+              </details>
+            </div>
+            <div class="faq-item">
+              <details>
+                <summary>What's the minimum charge amount?</summary>
+                <div class="faq-answer">
+                  The minimum charge amount is $0.50. This is the smallest amount that Stripe
+                  can reliably process while still generating card activity that issuers recognize.
+                </div>
+              </details>
+            </div>
+            <div class="faq-item">
+              <details>
+                <summary>Do I pay per card or per account?</summary>
+                <div class="faq-answer">
+                  You pay per card. Each credit card you add gets its own subscription with
+                  its own amount and schedule. This gives you complete control over each card's
+                  activity and cost.
+                </div>
+              </details>
+            </div>
+            <div class="faq-item">
+              <details>
+                <summary>Can I change my price after signing up?</summary>
+                <div class="faq-answer">
+                  Yes! You can modify your subscription at any time through the Stripe customer
+                  portal. Change your amount, frequency, or cancel entirely - it's all under
+                  your control.
+                </div>
+              </details>
+            </div>
+            <div class="faq-item">
+              <details>
+                <summary>Are there any refunds?</summary>
+                <div class="faq-answer">
+                  Since charges are typically very small and go towards legitimate card activity,
+                  we don't offer refunds for charges that were successfully processed. However,
+                  you can cancel anytime to prevent future charges.
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Protect Your Credit Cards?</h2>
+        <p>Start with as little as $1 per year per card</p>
+        <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started Now</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'features' %}">Features</a>
+          <a href="{% url 'how-it-works' %}">How It Works</a>
+          <a href="{% url 'pricing' %}">Pricing</a>
+          <a href="{% url 'about' %}">About</a>
+          <a href="{% url 'account_login' %}">Sign In</a>
+        </div>
+        <p>
+          &copy; <span id="current-year"></span> Charj. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
+            integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

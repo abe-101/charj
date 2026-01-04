@@ -2,16 +2,55 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import login_not_required
+from django.contrib.sitemaps.views import sitemap
 from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 
+from config.sitemaps import sitemaps
+
 urlpatterns = [
+    # Public SEO pages
     path(
         "",
         login_not_required(TemplateView.as_view(template_name="pages/home.html")),
         name="home",
+    ),
+    path(
+        "about/",
+        login_not_required(TemplateView.as_view(template_name="pages/about.html")),
+        name="about",
+    ),
+    path(
+        "features/",
+        login_not_required(TemplateView.as_view(template_name="pages/features.html")),
+        name="features",
+    ),
+    path(
+        "how-it-works/",
+        login_not_required(
+            TemplateView.as_view(template_name="pages/how-it-works.html"),
+        ),
+        name="how-it-works",
+    ),
+    path(
+        "pricing/",
+        login_not_required(TemplateView.as_view(template_name="pages/pricing.html")),
+        name="pricing",
+    ),
+    path(
+        "sitemap.xml",
+        login_not_required(sitemap),
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
+    path(
+        "robots.txt",
+        login_not_required(
+            TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+        ),
+        name="robots",
     ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),

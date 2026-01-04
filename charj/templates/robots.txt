@@ -1,0 +1,20 @@
+# robots.txt for charj.cc
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://charj.cc/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /cards/
+Disallow: /users/
+Disallow: /djstripe/
+
+# Allow public pages
+Allow: /
+Allow: /about/
+Allow: /features/
+Allow: /how-it-works/
+Allow: /pricing/
