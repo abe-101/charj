@@ -831,6 +831,9 @@ $body-color: #3d5a80;  // Softer navy-gray for body text
 .feature-icon-lg {
   font-size: 2.5rem;
 }
+
+// Responsive Typography
+@media (max-width: 768px) {
   .landing-page {
     .hero-section {
       min-height: auto;
