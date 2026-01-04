@@ -1,0 +1,138 @@
+{% load static compress %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {# SEO Meta Tags - Override in child templates #}
+    <title>
+      {% block title %}
+        Charj - Keep Credit Cards Active
+      {% endblock title %}
+    </title>
+    <meta name="description"
+          content="{% block meta_description %}Keep your credit cards active with small, automated charges. Prevent closures due to inactivity.{% endblock meta_description %}" />
+    <meta name="keywords"
+          content="{% block meta_keywords %}credit card keep alive, prevent card closure, credit card inactivity{% endblock meta_keywords %}" />
+    <meta name="author" content="Abe Hanoka" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical"
+          href="{% block canonical_url %}https://charj.cc/{% endblock canonical_url %}" />
+    {# Open Graph Tags #}
+    <meta property="og:type"
+          content="{% block og_type %}website{% endblock og_type %}" />
+    <meta property="og:url"
+          content="{% block og_url %}https://charj.cc/{% endblock og_url %}" />
+    <meta property="og:site_name" content="Charj" />
+    <meta property="og:title"
+          content="{% block og_title %}Charj - Keep Credit Cards Active{% endblock og_title %}" />
+    <meta property="og:description"
+          content="{% block og_description %}Keep your credit cards active with automated charges. Prevent closures due to inactivity.{% endblock og_description %}" />
+    <meta property="og:image" content="https://charj.cc/og-image.png" />
+    {# Twitter Cards #}
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url"
+          content="{% block twitter_url %}https://charj.cc/{% endblock twitter_url %}" />
+    <meta property="twitter:title"
+          content="{% block twitter_title %}Charj - Keep Credit Cards Active{% endblock twitter_title %}" />
+    <meta property="twitter:description"
+          content="{% block twitter_description %}Keep your credit cards active with automated charges.{% endblock twitter_description %}" />
+    {# Favicon #}
+    <link rel="icon"
+          type="image/x-icon"
+          href="{% static 'images/favicons/favicon.ico' %}" />
+    {# Fonts #}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+    {# CSS #}
+    {% compress css %}
+      <link rel="stylesheet"
+            type="text/x-scss"
+            href="{% static 'css/custom-bootstrap.scss' %}" />
+    {% endcompress %}
+    {# JSON-LD Structured Data - Override in child templates #}
+    {% block json_ld %}
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Charj",
+          "url": "https://charj.cc",
+          "description": "Credit card keep-alive service that prevents account closures due to inactivity.",
+          "founder": {
+            "@type": "Person",
+            "name": "Abe Hanoka",
+            "url": "https://habet.dev"
+          }
+        }
+      </script>
+    {% endblock json_ld %}
+  </head>
+  <body class="landing-page">
+    {# Navigation #}
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">Charj</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link {% block nav_pricing_active %}{% endblock nav_pricing_active %}"
+                 href="{% url 'pricing' %}">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% block nav_about_active %}{% endblock nav_about_active %}"
+                 href="{% url 'about' %}">About</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    {# Breadcrumb - Optional, override in child #}
+    {% block breadcrumb %}
+    {% endblock breadcrumb %}
+    {# Main Content #}
+    {% block content %}
+    {% endblock content %}
+    {# Footer #}
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'pricing' %}">Pricing</a>
+          <a href="{% url 'about' %}">About</a>
+          <a href="{% url 'account_login' %}">Sign In</a>
+        </div>
+        <p>
+          {% now "Y" %} Charj. Built by <a href="{% url 'about' %}">Abe Hanoka</a>.
+        </p>
+      </div>
+    </footer>
+    {# JavaScript #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
+            integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+    {% block extra_js %}
+    {% endblock extra_js %}
+  </body>
+</html>

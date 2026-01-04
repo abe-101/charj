@@ -1,303 +1,235 @@
-{% load static %}
+{% extends "pages/landing_base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pricing - Charj Credit Card Keep-Alive Service</title>
-    <meta name="description"
-          content="Charj pricing: you choose your amount starting at $0.50. Pick daily, weekly, monthly, or yearly. No hidden fees. Cancel anytime." />
-    <meta name="keywords"
-          content="credit card keep alive cost, charj pricing, credit card inactivity service price" />
-    <meta name="author" content="Abe Hanoka" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://charj.cc/pricing/" />
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://charj.cc/pricing/" />
-    <meta property="og:title" content="Pricing - Charj" />
-    <meta property="og:description"
-          content="You choose your price. Starting at $0.50. No hidden fees." />
-    <meta property="og:image" content="https://charj.cc/og-image.png" />
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary" />
-    <meta property="twitter:title" content="Pricing - Charj" />
-    <meta property="twitter:description"
-          content="You choose your price. Starting at $0.50." />
-    <!-- Favicon -->
-    <link rel="icon"
-          type="image/x-icon"
-          href="{% static 'images/favicons/favicon.ico' %}" />
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
-          rel="stylesheet" />
-    {% load compress %}
-
-    {% compress css %}
-      <link rel="stylesheet"
-            type="text/x-scss"
-            href="{% static 'css/custom-bootstrap.scss' %}" />
-    {% endcompress %}
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": "Charj Credit Card Keep-Alive Service",
-        "description": "Automated charges to keep credit cards active and prevent closure due to inactivity.",
-        "brand": {
-          "@type": "Brand",
-          "name": "Charj"
-        },
-        "offers": {
-          "@type": "Offer",
-          "price": "0.50",
-          "priceCurrency": "USD",
-          "availability": "https://schema.org/InStock",
-          "priceValidUntil": "2026-12-31"
+{% block title %}
+  Pricing - Charj Credit Card Keep-Alive Service
+{% endblock title %}
+{% block meta_description %}
+  Charj pricing: you choose your amount starting at $0.50. Pick daily, weekly, monthly, or yearly. No hidden fees. Cancel anytime.
+{% endblock meta_description %}
+{% block meta_keywords %}
+  credit card keep alive cost, charj pricing, credit card inactivity service price
+{% endblock meta_keywords %}
+{% block canonical_url %}
+  https://charj.cc/pricing/
+{% endblock canonical_url %}
+{% block og_url %}
+  https://charj.cc/pricing/
+{% endblock og_url %}
+{% block og_title %}
+  Pricing - Charj
+{% endblock og_title %}
+{% block og_description %}
+  You choose your price. Starting at $0.50. No hidden fees.
+{% endblock og_description %}
+{% block twitter_url %}
+  https://charj.cc/pricing/
+{% endblock twitter_url %}
+{% block twitter_title %}
+  Pricing - Charj
+{% endblock twitter_title %}
+{% block twitter_description %}
+  You choose your price. Starting at $0.50.
+{% endblock twitter_description %}
+{% block nav_pricing_active %}
+  active
+{% endblock nav_pricing_active %}
+{% block json_ld %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Charj Credit Card Keep-Alive Service",
+      "description": "Automated charges to keep credit cards active and prevent closure due to inactivity.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Charj"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0.50",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "priceValidUntil": "2026-12-31"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://charj.cc/"
+      }, {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Pricing",
+        "item": "https://charj.cc/pricing/"
+      }]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How much does Charj cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You choose. Select any amount starting from $0.50 and pick your frequency (daily, weekly, monthly, or yearly). Most users choose $1 per year per card."
         }
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [{
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://charj.cc/"
-        }, {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Pricing",
-          "item": "https://charj.cc/pricing/"
-        }]
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [{
-          "@type": "Question",
-          "name": "How much does Charj cost?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "You choose. Select any amount starting from $0.50 and pick your frequency (daily, weekly, monthly, or yearly). Most users choose $1 per year per card."
-          }
-        }, {
-          "@type": "Question",
-          "name": "Are there any hidden fees?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. You pay the amount you choose on the schedule you select. No setup fees, no cancellation fees."
-          }
-        }, {
-          "@type": "Question",
-          "name": "Can I cancel?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, anytime. Cancel through your dashboard or Stripe's portal. No fees."
-          }
-        }]
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Charj",
-        "url": "https://charj.cc",
-        "description": "Credit card keep-alive service that prevents account closures due to inactivity.",
-        "founder": {
-          "@type": "Person",
-          "name": "Abe Hanoka",
-          "url": "https://habet.dev"
+      }, {
+        "@type": "Question",
+        "name": "Are there any hidden fees?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. You pay the amount you choose on the schedule you select. No setup fees, no cancellation fees."
         }
+      }, {
+        "@type": "Question",
+        "name": "Can I cancel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, anytime. Cancel through your dashboard or Stripe's portal. No fees."
+        }
+      }]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Charj",
+      "url": "https://charj.cc",
+      "description": "Credit card keep-alive service that prevents account closures due to inactivity.",
+      "founder": {
+        "@type": "Person",
+        "name": "Abe Hanoka",
+        "url": "https://habet.dev"
       }
-    </script>
-  </head>
-  <body class="landing-page">
-    <nav class="navbar navbar-expand-md navbar-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">Charj</a>
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link active" href="{% url 'pricing' %}">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'about' %}">About</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'account_login' %}">Sign In</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
-            </li>
-          </ul>
+    }
+  </script>
+{% endblock json_ld %}
+{% block breadcrumb %}
+  <nav aria-label="breadcrumb" class="container mt-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Pricing</li>
+    </ol>
+  </nav>
+{% endblock breadcrumb %}
+{% block content %}
+  <section class="hero-section section-hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h1 class="hero-title">Pricing</h1>
+          <p class="hero-subtitle">You choose. No hidden fees.</p>
         </div>
       </div>
-    </nav>
-    <nav aria-label="breadcrumb" class="container mt-3">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Pricing</li>
-      </ol>
-    </nav>
-    <section class="hero-section section-hero">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <h1 class="hero-title">Pricing</h1>
-            <p class="hero-subtitle">You choose. No hidden fees.</p>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="pricing-card text-center">
+            <div class="price-tag">
+              <div class="price">You choose</div>
+              <div class="price-period">$0.50 minimum</div>
+            </div>
+            <div class="mt-4">
+              <h3>How it works</h3>
+              <ul class="text-start pricing-features">
+                <li>Pick any amount from $0.50 to whatever you want</li>
+                <li>Pick a frequency: daily, weekly, monthly, or yearly</li>
+                <li>Each card has its own subscription</li>
+                <li>Cancel anytime through dashboard or Stripe portal</li>
+              </ul>
+            </div>
+            <div class="mt-4">
+              <h3>What most people choose</h3>
+              <p class="lead">
+                <strong>$1/year per card</strong>
+              </p>
+              <p class="text-muted">
+                Yearly is the most common choice. One charge per year keeps the card active. That's the point.
+              </p>
+            </div>
+            <a href="{% url 'account_signup' %}"
+               class="btn btn-primary btn-lg w-100 mt-4">Get Started</a>
           </div>
         </div>
       </div>
-    </section>
-    <section>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div class="pricing-card text-center">
-              <div class="price-tag">
-                <div class="price">You choose</div>
-                <div class="price-period">$0.50 minimum</div>
+    </div>
+  </section>
+  <section class="bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="mb-4">FAQ</h2>
+          <div class="faq-item">
+            <details open>
+              <summary>Why do I choose the price?</summary>
+              <div class="faq-answer">
+                Different people have different preferences. Some want minimal yearly charges. Others want monthly visibility on their statements. You know what works for you.
               </div>
-              <div class="mt-4">
-                <h3>How it works</h3>
-                <ul class="text-start pricing-features">
-                  <li>Pick any amount from $0.50 to whatever you want</li>
-                  <li>Pick a frequency: daily, weekly, monthly, or yearly</li>
-                  <li>Each card has its own subscription</li>
-                  <li>Cancel anytime through dashboard or Stripe portal</li>
-                </ul>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>What's the minimum?</summary>
+              <div class="faq-answer">$0.50. That's the smallest amount Stripe can reliably process.</div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>Is there a maximum?</summary>
+              <div class="faq-answer">
+                No practical limit. Though if you're charging yourself $1000/month to keep a card active, you might want to reconsider.
               </div>
-              <div class="mt-4">
-                <h3>What most people choose</h3>
-                <p class="lead">
-                  <strong>$1/year per card</strong>
-                </p>
-                <p class="text-muted">
-                  Yearly is the most common choice. One charge per year keeps
-                  the card active. That's the point.
-                </p>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>Per card or per account?</summary>
+              <div class="faq-answer">Per card. Each card you add gets its own subscription with its own amount and schedule.</div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>Can I change my price later?</summary>
+              <div class="faq-answer">Yes. Modify through the Stripe customer portal.</div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>Any hidden fees?</summary>
+              <div class="faq-answer">No. You pay what you choose. No setup fee, no account fee, no cancellation fee.</div>
+            </details>
+          </div>
+          <div class="faq-item">
+            <details>
+              <summary>Refunds?</summary>
+              <div class="faq-answer">
+                The charges are typically very small and go through successfully. We don't offer refunds for processed charges, but you can cancel anytime to stop future charges.
               </div>
-              <a href="{% url 'account_signup' %}"
-                 class="btn btn-primary btn-lg w-100 mt-4">Get Started</a>
-            </div>
+            </details>
           </div>
         </div>
       </div>
-    </section>
-    <section class="bg-light">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <h2 class="mb-4">FAQ</h2>
-            <div class="faq-item">
-              <details open>
-                <summary>Why do I choose the price?</summary>
-                <div class="faq-answer">
-                  Different people have different preferences. Some want minimal
-                  yearly charges. Others want monthly visibility on their statements.
-                  You know what works for you.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>What's the minimum?</summary>
-                <div class="faq-answer">$0.50. That's the smallest amount Stripe can reliably process.</div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>Is there a maximum?</summary>
-                <div class="faq-answer">
-                  No practical limit. Though if you're charging yourself $1000/month
-                  to keep a card active, you might want to reconsider.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>Per card or per account?</summary>
-                <div class="faq-answer">
-                  Per card. Each card you add gets its own subscription with
-                  its own amount and schedule.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>Can I change my price later?</summary>
-                <div class="faq-answer">Yes. Modify through the Stripe customer portal.</div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>Any hidden fees?</summary>
-                <div class="faq-answer">
-                  No. You pay what you choose. No setup fee, no account fee,
-                  no cancellation fee.
-                </div>
-              </details>
-            </div>
-            <div class="faq-item">
-              <details>
-                <summary>Refunds?</summary>
-                <div class="faq-answer">
-                  The charges are typically very small and go through successfully.
-                  We don't offer refunds for processed charges, but you can
-                  cancel anytime to stop future charges.
-                </div>
-              </details>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="cta-section">
-      <div class="container">
-        <h2>Ready?</h2>
-        <p>$1/year keeps your card active.</p>
-        <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started</a>
-      </div>
-    </section>
-    <footer>
-      <div class="container">
-        <div class="footer-links">
-          <a href="{% url 'home' %}">Home</a>
-          <a href="{% url 'pricing' %}">Pricing</a>
-          <a href="{% url 'about' %}">About</a>
-          <a href="{% url 'account_login' %}">Sign In</a>
-        </div>
-        <p>
-          {% now "Y" %} Charj. Built by <a href="{% url 'about' %}">Abe Hanoka</a>.
-        </p>
-      </div>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
-            integrity="sha512-nKXmKvJyiGQy343jatQlzDprflyB5c+tKCzGP3Uq67v+lmzfnZUi/ZT+fc6ITZfSC5HhaBKUIvr/nTLCV+7F+Q=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"></script>
-  </body>
-</html>
+    </div>
+  </section>
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready?</h2>
+      <p>$1/year keeps your card active.</p>
+      <a href="{% url 'account_signup' %}" class="btn btn-secondary btn-lg">Get Started</a>
+    </div>
+  </section>
+{% endblock content %}
