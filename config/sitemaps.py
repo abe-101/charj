@@ -24,4 +24,4 @@ class StaticViewSitemap(Sitemap):
 
     def lastmod(self, item):
         # Return current date for now - in production, track actual page updates
-        return datetime(2025, 1, 4, tzinfo=UTC)
+        return datetime(2026, 1, 4, tzinfo=UTC)
