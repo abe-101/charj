@@ -130,7 +130,7 @@ force-single-line = true
 
 [dependency-groups]
 dev = [
-    "django-stubs[compatible-mypy]==5.2.8",
+    "django-stubs[compatible-mypy]==5.2.9",
     "ipdb==0.13.13",
     "mypy==1.19.1",
     "psycopg[binary]==3.3.2",
@@ -144,7 +144,7 @@ dev = [
     "djlint==1.36.4",
     "pre-commit==4.5.1",
     "factory-boy==3.3.3",
-    "django-debug-toolbar==6.1.0",
+    "django-debug-toolbar==6.2.0",
     "django-extensions==4.1",
     "django-coverage-plugin==3.2.0",
     "pytest-django==4.11.1",
@@ -181,7 +181,7 @@ dependencies = [
     "django-redis==6.0.0",
     "gunicorn==23.0.0",
     "psycopg[c]==3.3.2",
-    "sentry-sdk==2.49.0",
+    "sentry-sdk==2.50.0",
     "django-anymail[mailjet]==14.0",
     "dj-stripe>=2.10.3",
     "stripe>=14.1.0",
@@ -189,5 +189,5 @@ dependencies = [
     "libsass>=0.23.0",
     "django-libsass>=0.9",
     "python-json-logger>=4.0.0",
-    "posthog==7.5.1",
+    "posthog==7.6.0",
 ]
