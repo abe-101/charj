@@ -313,6 +313,8 @@ ACCOUNT_FORMS = {"signup": "charj.users.forms.UserSignupForm"}
 SOCIALACCOUNT_ADAPTER = "charj.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "charj.users.forms.UserSocialSignupForm"}
+# https://docs.allauth.org/en/latest/account/configuration.html
+ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = "phone_number"
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
