@@ -77,6 +77,14 @@ inactivity.
 
 This project uses `uv` for dependency management. Virtual environment is at `.venv/`.
 
+> **Claude Code on the web / fresh sandbox?** Start with
+> [CLAUDE_CODE_SETUP.md](CLAUDE_CODE_SETUP.md). It covers the hurdles a
+> fresh, network-restricted container hits before any command below works:
+> missing `libpq-dev` (psycopg-c build failure), bootstrapping PostgreSQL,
+> creating a login-capable test user, the Stripe API call on login that
+> 500s without network access, and stubbing blocked CDN scripts for
+> browser-based verification.
+
 ### Running the Development Server
 
 ```bash
@@ -184,16 +192,23 @@ Uses a custom User model (`charj.users.User`) with email-based authentication in
 
 Main URL configuration in `config/urls.py`:
 - `/` - Home page
+- `/pricing/` - Pricing page
 - `/about/` - About page
 - `/admin/` - Django admin
 - `/users/` - User management URLs
 - `/accounts/` - django-allauth authentication URLs
+- `/cards/` - Card dashboard and add-card flow (`charj.cards`):
+  - `/cards/` - Dashboard listing cards and subscriptions
+  - `/cards/add/` - Add card flow (Stripe Elements + SetupIntent)
+  - `/cards/customer-portal/` - Redirect to Stripe Customer Portal
 - `/djstripe/` - dj-stripe dashboard
 
 ### Django Apps
 
 Local apps are in the `charj/` directory:
 - `charj.users` - Custom user model and authentication
+- `charj.cards` - Core business logic: card dashboard, add-card flow,
+  subscription creation, and the dynamic pricing service
 - `charj.contrib.sites` - Custom sites migration module
 
 ### Templates
@@ -219,10 +234,21 @@ Key environment variables (configured in `.env` file):
 - `DJANGO_READ_DOT_ENV_FILE` - Set to `True` to read `.env` file
 - `STRIPE_TEST_SECRET_KEY` - Stripe test secret key
 - `STRIPE_TEST_PUBLIC_KEY` - Stripe test public key
+- `STRIPE_PRICE_ID` / `STRIPE_PRODUCT_ID` - Stripe product/price for dynamic pricing
+- `STRIPE_MIN_AMOUNT_CENTS` - Minimum charge amount (defaults to `50`, i.e. $0.50 —
+  the minimum promised on the marketing pages and Stripe's USD minimum)
+- `STRIPE_MAX_AMOUNT_CENTS` - Maximum charge amount (defaults to `100000`, i.e. $1,000)
+- `STRIPE_MAX_INTERVAL_COUNT` - Maximum billing interval count (defaults to `36`)
 - `REDIS_URL` - Redis connection string (defaults to `redis://localhost:6379/0`)
 - `DJANGO_SECRET_KEY` - Django secret key (has default for local dev)
 - `DJANGO_DEBUG` - Debug mode flag
 - `DJANGO_ACCOUNT_ALLOW_REGISTRATION` - Allow user registration
+
+**Deployment caveat:** the pricing constraints above are env-overridable.
+A stale `STRIPE_MIN_AMOUNT_CENTS` set on the production host silently
+overrides the code default — check host config vars when changing pricing
+limits, and keep them consistent with the marketing copy in
+`charj/templates/pages/home.html` and `pricing.html`.
 
 ## Email in Development
 
@@ -277,6 +303,18 @@ This approach ensures visual consistency across all pages and makes the design s
 
 The `charj/users/signals.py` file contains critical Stripe customer creation logic that runs on user login. When modifying user authentication flow, ensure this signal continues to work correctly.
 
+### Dynamic Pricing Service
+
+`charj/cards/pricing_service.py` resolves a Stripe Price for any
+(amount, interval, interval_count) combination via a three-tier lookup:
+local djstripe cache first, then a Stripe API search by `lookup_key`
+(format: `{interval}_{interval_count}_{amount_cents}`), then dynamic
+creation under `STRIPE_PRODUCT_ID`. All amount/interval validation lives
+in `validate_pricing_parameters()` — both the backend subscription flow
+and the frontend config served by `AddCardView` read the same
+`STRIPE_*` settings, so constraint changes belong in settings, not in
+templates or views.
+
 ### Settings Pattern
 
 Environment-specific settings import from base: `from .base import *`. Always add new shared settings to `base.py` and override only what's needed in environment files.
@@ -294,3 +332,13 @@ Tests use:
 - Coverage plugin: django_coverage_plugin
 - Test files: `tests.py` or `test_*.py`
 - Factory Boy for test fixtures
+
+### Testing Convention: Defaults vs Overrides
+
+A test that sets `settings.SOME_SETTING = X` only proves behavior *at X* —
+it cannot catch a wrong default in `base.py`. Values the product promises
+externally (e.g. the $0.50 minimum advertised on the marketing pages) must
+have at least one test that exercises the **unmodified default settings**.
+See `test_default_minimum_accepts_fifty_cents` in `charj/cards/tests.py`
+for the pattern; this exists because every minimum-amount test once
+overrode the setting and a $1.00 default shipped unnoticed.
