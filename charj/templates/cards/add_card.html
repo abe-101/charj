@@ -75,7 +75,7 @@
                     <input type="number"
                            class="form-control"
                            id="custom-amount"
-                           min="0.50"
+                           min="{{ min_amount_dollars }}"
                            max="1000"
                            step="0.01"
                            value="1.00"
@@ -102,7 +102,7 @@
                 </div>
               </div>
               <div class="small text-muted">
-                Min: ${{ min_amount_dollars }} | Max: $1,000 | Intervals: 1-{{ max_interval_count }}
+                Min: ${{ min_amount_dollars|floatformat:2 }} | Max: $1,000 | Intervals: 1-{{ max_interval_count }}
               </div>
             </div>
             <!-- Dynamic Pricing Summary -->
