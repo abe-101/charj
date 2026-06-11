@@ -88,6 +88,19 @@ class TestAddCardView:
         assert response.status_code == HTTPStatus.FOUND
         assert "/accounts/login/" in response.url
 
+    def test_default_minimum_is_fifty_cents(self, user: User, rf: RequestFactory):
+        """The page context should advertise the $0.50 minimum by default.
+
+        Marketing promises a $0.50 minimum, so the default config (no
+        STRIPE_MIN_AMOUNT_CENTS override) must propagate 50 cents to the
+        frontend pricing config and the displayed minimum.
+        """
+        request = rf.get("/fake-url/")
+        request.user = user
+        response = add_card_view(request)
+        assert response.context_data["pricing_config"]["minAmountCents"] == 50  # noqa: PLR2004
+        assert response.context_data["min_amount_dollars"] == 0.50  # noqa: PLR2004
+
 
 class TestCreateSetupIntentView:
     """Tests for the SetupIntent creation API endpoint."""
@@ -416,6 +429,16 @@ class TestPricingServiceValidation:
     def test_validate_pricing_parameters_amount_too_low(self, settings):
         """Amount below minimum should raise error."""
         settings.STRIPE_MIN_AMOUNT_CENTS = 50
+        with pytest.raises(InvalidPricingParametersError) as exc_info:
+            validate_pricing_parameters(49, "year", 1)
+        assert "at least 50 cents" in str(exc_info.value)
+
+    def test_default_minimum_accepts_fifty_cents(self):
+        """The default config (no override) must accept the advertised $0.50."""
+        validate_pricing_parameters(50, "year", 1)
+
+    def test_default_minimum_rejects_below_fifty_cents(self):
+        """The default config (no override) must reject amounts below $0.50."""
         with pytest.raises(InvalidPricingParametersError) as exc_info:
             validate_pricing_parameters(49, "year", 1)
         assert "at least 50 cents" in str(exc_info.value)

@@ -338,8 +338,8 @@ STRIPE_PRODUCT_ID = env("STRIPE_PRODUCT_ID", default="")
 # Custom Pricing Constraints
 STRIPE_MIN_AMOUNT_CENTS = env.int(
     "STRIPE_MIN_AMOUNT_CENTS",
-    default=100,
-)  # $1.00 minimum
+    default=50,
+)  # $0.50 minimum (Stripe's USD minimum)
 STRIPE_MAX_AMOUNT_CENTS = env.int(
     "STRIPE_MAX_AMOUNT_CENTS",
     default=100000,
