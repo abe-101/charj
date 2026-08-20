@@ -242,6 +242,12 @@ EMAIL_BACKEND = env(
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
+# The feedback email is signed by a person and asks for a reply, so it is sent
+# from a real inbox rather than the `noreply@` default.
+FEEDBACK_FROM_EMAIL = env(
+    "DJANGO_FEEDBACK_FROM_EMAIL",
+    default="Abe Hanoka <abe@charj.cc>",
+)
 
 # ADMIN
 # ------------------------------------------------------------------------------
