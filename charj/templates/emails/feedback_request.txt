@@ -1,0 +1,20 @@
+{% comment %}
+"Im" below is a deliberate typo, it makes the note read as hand-typed.
+{% endcomment %}{% autoescape off %}Hi {{ user.name|default:"there" }},
+
+I'm Abe, I built Charj. I saw you added a card, thanks for that, it
+made my day.
+
+If you've got thirty seconds: where did you hear about Charj? Google,
+reddit, a friend? Im trying to work out what's actually reaching
+people, and right now I'm mostly guessing.
+
+And if anything felt clunky or broken while you were setting it up,
+tell me. I'd rather hear it now than never.
+
+Just hit reply, it comes straight to me.
+
+Thanks,
+Abe
+charj.cc
+{% endautoescape %}
