@@ -2,7 +2,10 @@ import json
 from http import HTTPStatus
 
 import pytest
+import responses
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.http import HttpResponse
 from django.test import RequestFactory
 from djstripe.models import Customer
 from djstripe.models import PaymentMethod
@@ -24,6 +27,8 @@ from charj.cards.views import create_setup_intent_view
 from charj.cards.views import create_subscription_view
 from charj.cards.views import dashboard_view
 from charj.users.models import User
+from charj.users.tests.factories import UserFactory
+from config.logging import RequestContextMiddleware
 
 pytestmark = pytest.mark.django_db
 
@@ -957,3 +962,146 @@ class TestPricingServiceTieredLookup:
         # Should not raise
         price_id = get_or_create_price(100, "year", 36)
         assert price_id is not None
+
+
+def _detach_calls(mock_stripe_api):
+    return [call for call in mock_stripe_api.calls if "detach" in call.request.url]
+
+
+class TestCreateSubscriptionPaymentMethodOwnership:
+    """A card is only cleaned up when it belongs to the requesting customer."""
+
+    def test_leaves_other_customers_payment_method_alone(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+        mock_stripe_api,
+    ):
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+        mock_stripe_api.add(
+            responses.GET,
+            "https://api.stripe.com/v1/payment_methods/pm_someone_else",
+            json={
+                "id": "pm_someone_else",
+                "object": "payment_method",
+                "customer": "cus_someone_else",
+                "type": "card",
+            },
+            status=200,
+        )
+
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {"payment_method_id": "pm_someone_else", "amount_cents": "nope"},
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert _detach_calls(mock_stripe_api) == []
+
+    def test_no_cleanup_without_a_customer(
+        self,
+        user: User,
+        rf: RequestFactory,
+        mock_stripe_api,
+    ):
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps({"payment_method_id": "pm_test_123"}),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+        assert _detach_calls(mock_stripe_api) == []
+
+    def test_cleans_up_own_payment_method_on_bad_amount(
+        self,
+        user: User,
+        rf: RequestFactory,
+        mock_stripe_api,
+    ):
+        Customer.get_or_create(subscriber=user)
+        request = rf.post(
+            "/fake-url/",
+            data=json.dumps(
+                {"payment_method_id": "pm_test_123", "amount_cents": "nope"},
+            ),
+            content_type="application/json",
+        )
+        request.user = user
+        response = create_subscription_view(request)
+
+        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert len(_detach_calls(mock_stripe_api)) == 1
+
+
+class TestCardEndpointThrottling:
+    """The card endpoints allow a limited number of requests per hour."""
+
+    def test_setup_intent_is_throttled(self, user: User, rf: RequestFactory, settings):
+        settings.CARDS_MAX_REQUESTS_PER_HOUR = 2
+
+        statuses = []
+        for _ in range(3):
+            request = rf.post("/fake-url/")
+            request.user = user
+            statuses.append(create_setup_intent_view(request).status_code)
+
+        assert statuses == [
+            HTTPStatus.OK,
+            HTTPStatus.OK,
+            HTTPStatus.TOO_MANY_REQUESTS,
+        ]
+
+    def test_subscription_is_throttled(
+        self,
+        user: User,
+        rf: RequestFactory,
+        settings,
+        mock_stripe_api,
+    ):
+        settings.CARDS_MAX_REQUESTS_PER_HOUR = 1
+        settings.STRIPE_PRODUCT_ID = "prod_test_123"
+        Customer.get_or_create(subscriber=user)
+
+        statuses = []
+        for _ in range(2):
+            request = rf.post(
+                "/fake-url/",
+                data=json.dumps({"payment_method_id": "pm_test_123"}),
+                content_type="application/json",
+            )
+            request.user = user
+            statuses.append(create_subscription_view(request).status_code)
+
+        assert statuses == [HTTPStatus.OK, HTTPStatus.TOO_MANY_REQUESTS]
+        assert _detach_calls(mock_stripe_api) == []
+
+    def test_limit_is_per_user(self, user: User, rf: RequestFactory, settings):
+        settings.CARDS_MAX_REQUESTS_PER_HOUR = 1
+        requesters: list[User] = [user, UserFactory.create()]
+
+        for requester in requesters:
+            request = rf.post("/fake-url/")
+            request.user = requester
+            assert create_setup_intent_view(request).status_code == HTTPStatus.OK
+
+
+class TestRequestContextMiddleware:
+    def test_does_not_create_session_for_anonymous_visitor(self, rf: RequestFactory):
+        request = rf.get("/")
+        SessionMiddleware(lambda r: HttpResponse()).process_request(request)
+        request.user = AnonymousUser()
+
+        response = RequestContextMiddleware(lambda r: HttpResponse("ok"))(request)
+
+        assert response.status_code == HTTPStatus.OK
+        assert request.session.session_key is None

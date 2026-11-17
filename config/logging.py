@@ -67,11 +67,9 @@ class RequestContextMiddleware:
         # Get session ID (persists across requests for the same user)
         # Only log first 8 chars for security - enough to trace sessions
         # without exposing full key
+        # Visitors without a session (crawlers, webhooks, first page view) just
+        # log without one rather than having a session row created for them.
         session_key = request.session.session_key
-        if not session_key:
-            # Create session if it doesn't exist
-            request.session.create()
-            session_key = request.session.session_key
         session_id_var.set(session_key[:8] if session_key else None)
 
         # Extract request metadata

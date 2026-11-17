@@ -2,6 +2,7 @@ import re
 
 import pytest
 import responses
+from django.core.cache import cache
 
 from charj.tests.fixtures import stripe_responses as stripe_fixtures
 from charj.users.models import User
@@ -11,6 +12,11 @@ from charj.users.tests.factories import UserFactory
 @pytest.fixture(autouse=True)
 def _media_storage(settings, tmpdir) -> None:
     settings.MEDIA_ROOT = tmpdir.strpath
+
+
+@pytest.fixture(autouse=True)
+def _clear_cache() -> None:
+    cache.clear()
 
 
 @pytest.fixture

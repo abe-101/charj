@@ -3,6 +3,7 @@ import logging
 
 import stripe
 from django.conf import settings
+from django.core.cache import cache
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -17,6 +18,30 @@ from charj.cards.services import get_user_cards
 
 logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+THROTTLE_WINDOW_SECONDS = 60 * 60
+
+
+def _too_many_requests(user_id: int, action: str) -> bool:
+    """Count this request and report whether the user is over the hourly limit."""
+    limit = getattr(settings, "CARDS_MAX_REQUESTS_PER_HOUR", 20)
+    key = f"cards:throttle:{action}:{user_id}"
+    cache.add(key, 0, THROTTLE_WINDOW_SECONDS)
+    try:
+        count = cache.incr(key)
+    except ValueError:
+        # Key expired between add() and incr(); start a fresh window.
+        cache.set(key, 1, THROTTLE_WINDOW_SECONDS)
+        count = 1
+    # A cache outage yields no count; let the request through in that case.
+    return isinstance(count, int) and count > limit
+
+
+def _throttled_response() -> JsonResponse:
+    return JsonResponse(
+        {"error": "Too many attempts. Please try again in a little while."},
+        status=429,
+    )
 
 
 class DashboardView(TemplateView):
@@ -116,6 +141,9 @@ def create_setup_intent_view(request):
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Authentication required"}, status=401)
 
+    if _too_many_requests(request.user.id, "setup_intent"):
+        return _throttled_response()
+
     try:
         customer, _ = Customer.get_or_create(subscriber=request.user)
 
@@ -156,14 +184,16 @@ def create_setup_intent_view(request):
         return JsonResponse({"error": "An unexpected error occurred"}, status=500)
 
 
-def _cleanup_payment_method(payment_method_id: str, user_id: int) -> None:
+def _cleanup_payment_method(payment_method_id: str | None, user_id: int) -> None:
     """
     Detach a payment method from the customer to clean up after failed subscription.
 
     Args:
-        payment_method_id: The Stripe payment method ID to detach
+        payment_method_id: The Stripe payment method ID to detach (no-op if None)
         user_id: The user ID for logging purposes
     """
+    if not payment_method_id:
+        return
     try:
         stripe.PaymentMethod.detach(payment_method_id)
         logger.info(
@@ -190,14 +220,46 @@ def create_subscription_view(request):  # noqa: PLR0911, C901
     if not request.user.is_authenticated:
         return JsonResponse({"error": "Authentication required"}, status=401)
 
-    payment_method_id = None  # Track for cleanup on failure
+    if _too_many_requests(request.user.id, "subscription"):
+        return _throttled_response()
+
+    # Only set once we know the card belongs to this customer, so the failure
+    # paths below never detach a payment method that isn't ours to detach.
+    payment_method_id = None
 
     try:
         data = json.loads(request.body)
-        payment_method_id = data.get("payment_method_id")
+        requested_payment_method_id = data.get("payment_method_id")
 
-        if not payment_method_id:
+        if not requested_payment_method_id:
             return JsonResponse({"error": "payment_method_id is required"}, status=400)
+
+        try:
+            customer = Customer.objects.get(subscriber=request.user)
+        except Customer.DoesNotExist:
+            logger.exception(
+                "Customer not found for user",
+                extra={"user_id": request.user.id},
+            )
+            return JsonResponse(
+                {"error": "Customer account not found"},
+                status=404,
+            )
+
+        # Verify payment method belongs to this customer
+        payment_method = stripe.PaymentMethod.retrieve(requested_payment_method_id)
+        if payment_method.customer != customer.id:
+            logger.warning(
+                "Payment method customer mismatch",
+                extra={
+                    "payment_method_id": requested_payment_method_id,
+                    "pm_customer": payment_method.customer,
+                    "expected_customer": customer.id,
+                    "user_id": request.user.id,
+                },
+            )
+            return JsonResponse({"error": "Invalid payment method"}, status=403)
+        payment_method_id = requested_payment_method_id
 
         # Extract pricing parameters with defaults ($1/year)
         amount_cents = data.get("amount_cents", 100)
@@ -214,34 +276,6 @@ def create_subscription_view(request):  # noqa: PLR0911, C901
                 {"error": "amount_cents and interval_count must be integers"},
                 status=400,
             )
-
-        try:
-            customer = Customer.objects.get(subscriber=request.user)
-        except Customer.DoesNotExist:
-            logger.exception(
-                "Customer not found for user",
-                extra={"user_id": request.user.id},
-            )
-            _cleanup_payment_method(payment_method_id, request.user.id)
-            return JsonResponse(
-                {"error": "Customer account not found"},
-                status=404,
-            )
-
-        # Verify payment method belongs to this customer
-        payment_method = stripe.PaymentMethod.retrieve(payment_method_id)
-        if payment_method.customer != customer.id:
-            logger.warning(
-                "Payment method customer mismatch",
-                extra={
-                    "payment_method_id": payment_method_id,
-                    "pm_customer": payment_method.customer,
-                    "expected_customer": customer.id,
-                    "user_id": request.user.id,
-                },
-            )
-            _cleanup_payment_method(payment_method_id, request.user.id)
-            return JsonResponse({"error": "Invalid payment method"}, status=403)
 
         # Get or create price for the requested parameters
         try:
@@ -323,8 +357,7 @@ def create_subscription_view(request):  # noqa: PLR0911, C901
             "Stripe error creating subscription",
             extra={"user_id": request.user.id},
         )
-        if payment_method_id:
-            _cleanup_payment_method(payment_method_id, request.user.id)
+        _cleanup_payment_method(payment_method_id, request.user.id)
         return JsonResponse(
             {"error": f"Failed to create subscription: {e!s}"},
             status=500,
@@ -334,6 +367,5 @@ def create_subscription_view(request):  # noqa: PLR0911, C901
             "Unexpected error creating subscription",
             extra={"user_id": request.user.id},
         )
-        if payment_method_id:
-            _cleanup_payment_method(payment_method_id, request.user.id)
+        _cleanup_payment_method(payment_method_id, request.user.id)
         return JsonResponse({"error": "An unexpected error occurred"}, status=500)
