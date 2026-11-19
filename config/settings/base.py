@@ -352,3 +352,5 @@ STRIPE_MAX_AMOUNT_CENTS = env.int(
 )  # $1000 maximum
 STRIPE_ALLOWED_INTERVALS = ["day", "week", "month", "year"]
 STRIPE_MAX_INTERVAL_COUNT = env.int("STRIPE_MAX_INTERVAL_COUNT", default=36)
+# How many times per hour a user can start adding a card / create a subscription
+CARDS_MAX_REQUESTS_PER_HOUR = env.int("CARDS_MAX_REQUESTS_PER_HOUR", default=100)
