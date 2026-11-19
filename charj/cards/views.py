@@ -24,7 +24,7 @@ THROTTLE_WINDOW_SECONDS = 60 * 60
 
 def _too_many_requests(user_id: int, action: str) -> bool:
     """Count this request and report whether the user is over the hourly limit."""
-    limit = getattr(settings, "CARDS_MAX_REQUESTS_PER_HOUR", 20)
+    limit = getattr(settings, "CARDS_MAX_REQUESTS_PER_HOUR", 100)
     key = f"cards:throttle:{action}:{user_id}"
     cache.add(key, 0, THROTTLE_WINDOW_SECONDS)
     try:
